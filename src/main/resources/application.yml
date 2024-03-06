@@ -1,0 +1,8 @@
+server:
+   port: 8000
+   servlet:
+      contextPath: /cavajal/api/v1
+      
+logging:
+   level:
+      org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
