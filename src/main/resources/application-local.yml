@@ -1,0 +1,32 @@
+---
+server:
+  port: 8000
+
+spring:
+  jpa:
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: false
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect # Add this line for PostgreSQL dialect
+    hibernate:
+      ddl-auto: update # You might want to set this as well
+  datasource:
+    carvajal:
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximumPoolSize: 10
+        minimumIdle: 5
+        poolName: ebusiness-jdbc-pool
+      jdbc-url: "jdbc:postgresql://localhost:5432/carvajal?currentSchema=facetime"
+      jmx-enabled: true
+      password: admin
+      username: postgres
+integration:
+  amq:
+    url: tcp://localhost:61616
+    user: admin
+    password: admin
+    maxConnections: 8
+    concurrentConsumers: 10
+  queues:
+    settlement: facetime
