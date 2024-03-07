@@ -1,7 +1,10 @@
 ---
 server:
   port: 8000
-
+logging:
+  level:
+    org:
+      springframework: DEBUG
 spring:
   jpa:
     properties:
