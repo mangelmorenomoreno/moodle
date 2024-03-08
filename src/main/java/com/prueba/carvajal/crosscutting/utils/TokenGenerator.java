@@ -6,7 +6,6 @@ import com.prueba.carvajal.crosscutting.domain.constants.ExceptionConstants;
 import com.prueba.carvajal.crosscutting.domain.constants.SecurityConstants;
 import com.prueba.carvajal.crosscutting.domain.dto.autentication.TokenData;
 import com.prueba.carvajal.crosscutting.persistence.entity.Usuario;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
@@ -44,8 +43,7 @@ public class TokenGenerator {
                 .compact();
     }
 
-    public static String createTokenMacroChangePassword(Usuario userMenu,
-                                                        Long expiration) {
+    public static String createTokenMacroChangePassword(Usuario userMenu) {
         Usuario userToken = userMenu;
         SecretKey key =
                 Keys.hmacShaKeyFor(SecurityConstants.JWT_KEY.getBytes(StandardCharsets.UTF_8));
@@ -54,22 +52,12 @@ public class TokenGenerator {
             .claim(SecurityConstants.EMAIL, userToken.getCorreoElectronico())
             .claim(SecurityConstants.IDUSER, userToken.getUserId())
             .issuedAt(new Date())
-            .expiration(new Date((new Date()).getTime() + expiration))
+            .expiration(new Date((new Date()).getTime() + 10000))
                 .signWith(key)
                 .compact();
     }
 
-    public static String refreshToken(String token) throws Exception {
-        SecretKey key = Keys.hmacShaKeyFor(SecurityConstants.JWT_KEY.getBytes(StandardCharsets.UTF_8));
-        try {
-            Jwts.parser().setSigningKey(key).build().parseSignedClaims(token).getPayload();
-            return getRefreshToken(token, key);
-        } catch (ExpiredJwtException e) {
-            return getRefreshToken(token, key);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     public static String getRefreshToken(String token, SecretKey key) throws Exception {
         return Jwts.builder().issuer(SecurityConstants.CARVAJAL).subject(SecurityConstants.JWT_TOKEN)
@@ -97,7 +85,7 @@ public class TokenGenerator {
 
     public static Map<String, Object> getMapToken(String token) throws  Exception {
 
-        Map<String, Object> mapping;
+        HashMap mapping;
         try {
             String[] chunks = token.split("\\.");
             Base64.Decoder decoder = Base64.getUrlDecoder();

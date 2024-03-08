@@ -20,10 +20,10 @@ import lombok.Setter;
  * Está mapeada a la tabla 'usuarios' en la base de datos.
  * Incluye detalles como el nombre, correo electrónico, contraseña y la fecha de creación.
  * Usuario
+ *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024
- *
  */
 
 @Builder
@@ -49,11 +49,11 @@ public class Usuario {
   @Column(name = "correo_electronico", nullable = false, unique = true, length = 150)
   private String correoElectronico;
 
-  @Column(name = "contraseña_hash", nullable = false, length = 255)
-  private String contrasenaHash;
 
   @Column(name = "fecha_creacion", nullable = true)
   @Temporal(TemporalType.TIMESTAMP)
   private Date fechaCreacion;
 
+  @Column(name = "estado")
+  private Boolean estado;
 }

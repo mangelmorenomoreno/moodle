@@ -1,23 +1,23 @@
 package com.prueba.carvajal.modules.usuario.usecase;
 
-import com.prueba.carvajal.crosscutting.domain.dto.autentication.AuthModelResultMacro;
-import com.prueba.carvajal.crosscutting.domain.dto.autentication.LoginData;
-import com.prueba.carvajal.crosscutting.domain.dto.autentication.TokenData;
+import com.prueba.carvajal.crosscutting.domain.dto.user.BasicInformationUserDTO;
 import com.prueba.carvajal.crosscutting.domain.dto.user.UserModelMacro;
+import com.prueba.carvajal.crosscutting.persistence.entity.Credencial;
 import com.prueba.carvajal.crosscutting.persistence.entity.Usuario;
-import com.prueba.carvajal.crosscutting.utils.EncriptedSha512;
 import com.prueba.carvajal.crosscutting.utils.TokenGenerator;
+import com.prueba.carvajal.modules.credencial.dataproviders.ICredencialDataProvider;
+import com.prueba.carvajal.modules.sendmail.usecase.message.MessageSenderService;
 import com.prueba.carvajal.modules.usuario.dataproviders.IUsuarioDataProvider;
-import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
 /**
  * UsuarioService
+ *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024
@@ -26,6 +26,15 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @Service
 public class UsuarioService {
+
+  @Value("${integration.queues.activate}")
+  private String activate;
+
+  @Autowired
+  private MessageSenderService messageSenderService;
+
+  @Autowired
+  private ICredencialDataProvider iCredencialDataProvider;
 
   @Autowired
   private IUsuarioDataProvider iUsuarioDataProvider;
@@ -41,62 +50,39 @@ public class UsuarioService {
     return iUsuarioDataProvider.findByCorreoElectronico(correoElectronico);
   }
 
+  public Boolean save(BasicInformationUserDTO basicInformationUserDTO) throws Exception {
 
-  public AuthModelResultMacro login(LoginData loginData) throws NoSuchAlgorithmException {
-    return Optional.ofNullable(iUsuarioDataProvider.findByCorreoElectronico(loginData.getEmail()))
-        .map(usuario -> processUserAuthentication(usuario, loginData))
-        .orElseGet(this::buildFailedAuthResult);
-  }
-
-  private AuthModelResultMacro processUserAuthentication(Usuario usuario, LoginData loginData) {
-    if (validatePassword(usuario, loginData)) {
-      return buildSuccessfulAuthResult(usuario);
-    } else {
-      return buildFailedAuthResult();
-    }
-  }
-
-  private AuthModelResultMacro buildSuccessfulAuthResult(Usuario usuario) {
-
-    String accessToken = TokenGenerator.createTokenMacro(TokenData.builder()
-        .usuario(usuario)
-        .expirationTime(TimeUnit.HOURS.toMillis(100))
+    Usuario usuario = iUsuarioDataProvider.save(Usuario.builder()
+        .nombre(basicInformationUserDTO.getNombre())
+        .apellido(basicInformationUserDTO.getApellido())
+        .correoElectronico(basicInformationUserDTO.getCorreo())
         .build());
 
-    UserModelMacro userInfo = UserModelMacro.builder()
-        .userName(usuario.getNombre() + " " + usuario.getApellido())
+    iCredencialDataProvider.save(Credencial.builder()
+        .usuario(usuario)
+        .tokenResetPassword(TokenGenerator.createTokenMacroChangePassword(usuario)).build());
+
+    messageSenderService.sendMessage(activate, UserModelMacro.builder()
+        .userId(usuario.getUserId())
         .email(usuario.getCorreoElectronico())
-        .userId(usuario.getUserId())
-        .build();
+        .userName(usuario.getNombre() + " " + usuario.getApellido())
+        .build());
 
-    return AuthModelResultMacro.builder()
-        .accessToken(accessToken)
-        .statusPassword(true)
-        .userId(usuario.getUserId())
-        .userInfo(userInfo)
-        .build();
+    return usuario.getUserId() != null;
   }
 
-  private AuthModelResultMacro buildFailedAuthResult() {
-    return AuthModelResultMacro.builder()
-        .accessToken(null)
-        .statusPassword(false)
-        .userId(null)
-        .userInfo(null)
-        .build();
+  public Boolean update(BasicInformationUserDTO basicInformationUserDTO, String token) throws Exception {
+    return iUsuarioDataProvider.save(Usuario.builder()
+        .userId(Integer.valueOf(TokenGenerator.getIdUserFromToken(token)))
+        .nombre(basicInformationUserDTO.getNombre())
+        .apellido(basicInformationUserDTO.getApellido())
+        .correoElectronico(basicInformationUserDTO.getCorreo())
+        .build()).getUserId() != null;
   }
 
-
-  private boolean validatePassword(Usuario usuario, LoginData loginData) {
-    String passwordEncrypted = usuario.getContrasenaHash();
-    String encryptPassword = null;
-    try {
-      encryptPassword = EncriptedSha512.encryptSHA512(
-          TokenGenerator.decryptPassword(loginData.getPassword()));
-    } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    }
-    return encryptPassword.equals(passwordEncrypted);
+  public List<Usuario> findByNombreAndCorreoLike(String valor) {
+    return iUsuarioDataProvider.findByNombreAndCorreoElectronicoSimilar(valor);
   }
+
 
 }

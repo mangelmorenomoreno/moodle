@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
 		"com.prueba.carvajal.infrastructure",
+		"com.prueba.carvajal.infrastructure.configuration",
 		"com.prueba.carvajal.modules",
 		"com.prueba.carvajal.crosscutting"})
 @EnableJpaRepositories(basePackages = {
