@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * PublicacionController
+ * PublicacionController.
+ *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024

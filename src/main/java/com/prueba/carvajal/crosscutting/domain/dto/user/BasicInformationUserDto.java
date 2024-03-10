@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * BasicInformationUserDTO
+ * BasicInformationUserDto.
  *
  * @author Miguel Angel Moreno
  * @version 1.0
@@ -19,11 +19,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BasicInformationUserDTO implements Serializable {
+public class BasicInformationUserDto implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    private String nombre;
-    private String apellido;
-    private String correo;
+  private static final long serialVersionUID = 1L;
+  private String nombre;
+  private String apellido;
+  private String correo;
 
 }

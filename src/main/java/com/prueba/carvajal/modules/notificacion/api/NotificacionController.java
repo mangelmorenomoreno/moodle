@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * NotificacionController
+ * NotificacionController.
+ *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024
  */
-
 @Log4j2
 @CrossOrigin("*")
 @RestController

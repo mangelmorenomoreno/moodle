@@ -5,10 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * ValidationError
+ * ValidationError.
+ *
  * @author miguel.moreno
  * @version 1.0
- * @since 7-03-2024
+ * @since 2024-03-10
  */
 @Data
 @Builder

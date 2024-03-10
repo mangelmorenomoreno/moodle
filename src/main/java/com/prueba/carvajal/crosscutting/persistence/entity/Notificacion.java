@@ -22,7 +22,6 @@ import lombok.Setter;
  * Está mapeada a la tabla 'notificaciones' en la base de datos.
  * Incluye el tipo de notificación, su estado (leído o no leído), y la fecha de envío.
  *
- * Notificacion
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024

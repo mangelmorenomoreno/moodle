@@ -1,6 +1,7 @@
 package com.prueba.carvajal.infrastructure.configuration;
 
 
+import jakarta.jms.ConnectionFactory;
 import java.util.Collections;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,8 +64,8 @@ public class JmsConfig {
    *
    * @return una instancia de JmsTemplate configurada.
    */
-  @Bean("jmsTemplate")
-  public JmsOperations jmsTemplate() {
+
+  public JmsOperations jmsTemplateOperations() {
     JmsTemplate jmsTemplate = new JmsTemplate();
     jmsTemplate.setConnectionFactory(connectionFactory());
     return jmsTemplate;
@@ -93,12 +94,27 @@ public class JmsConfig {
    * @return una instancia de MessageConverter.
    */
   public MessageConverter messageConverter() {
-    MappingJackson2MessageConverter converter =
-        new MappingJackson2MessageConverter();
+    MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
     converter.setTargetType(MessageType.OBJECT);
     return converter;
   }
 
-
+  /**
+   * Configura y proporciona un bean de {@link JmsTemplate} para la gestión de mensajes JMS.
+   * Este método es marcado con la anotación @Bean, lo que indica que su retorno es un componente
+   * de Spring que puede ser inyectado en otras partes de la aplicación. {@link JmsTemplate} es
+   * utilizado para simplificar la creación y recepción de mensajes a través de JMS, y este método
+   * configura la plantilla con una {@link ConnectionFactory} específica.
+   *
+   * @param connectionFactory La fábrica de conexiones que se utilizará para configurar la
+   *                          {@link JmsTemplate}.
+   * @return Un objeto {@link JmsTemplate} configurado, listo para ser utilizado en la aplicación.
+   */
+  @Bean
+  public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+    JmsTemplate template = new JmsTemplate();
+    template.setConnectionFactory(connectionFactory);
+    return template;
+  }
 }
 

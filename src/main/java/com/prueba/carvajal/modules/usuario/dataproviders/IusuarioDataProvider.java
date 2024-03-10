@@ -4,14 +4,14 @@ import com.prueba.carvajal.crosscutting.persistence.entity.Usuario;
 import java.util.List;
 
 /**
- * IUsuarioDataProvider
+ * IUsuarioDataProvider.
  *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024
  */
 
-public interface IUsuarioDataProvider {
+public interface IusuarioDataProvider {
 
   public Usuario findByUserId(Integer userId);
 

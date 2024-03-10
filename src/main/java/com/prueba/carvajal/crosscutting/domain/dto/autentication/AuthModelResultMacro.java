@@ -6,17 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * AuthModelResultMacro
+ * AuthModelResultMacro.
+ *
  * @author miguel.moreno
- * @since 07-03-2024
+ * @version 1.0
+ * @since 2024-03-10
  */
 
 @Data
 @Builder
 public class AuthModelResultMacro {
-
-    private String accessToken;
-    private Integer userId;
-    private UserModelMacro userInfo;
-    private boolean statusPassword;
+  private String accessToken;
+  private Integer userId;
+  private UserModelMacro userInfo;
+  private boolean statusPassword;
 }

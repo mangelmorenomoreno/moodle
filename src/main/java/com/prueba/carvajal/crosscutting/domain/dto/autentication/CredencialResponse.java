@@ -1,15 +1,14 @@
-package com.prueba.carvajal.crosscutting.domain.response;
+package com.prueba.carvajal.crosscutting.domain.dto.autentication;
 
-
-import com.prueba.carvajal.crosscutting.domain.enums.ResponseStatusCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 /**
- * ResponseStatus.
+ * CredencialResponse.
  *
  * @author miguel.moreno
  * @version 1.0
@@ -20,7 +19,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseStatus {
-  private ResponseStatusCode statusCode;
-  private String message;
+public class CredencialResponse {
+  private String error;
+  private Boolean status;
 }

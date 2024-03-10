@@ -7,7 +7,11 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Repositorio JPA para la entidad Notificacion.
- * Provee operaciones CRUD automáticas y la capacidad de añadir consultas específicas para Notificaciones.
+ * Provee operaciones CRUD automáticas y la capacidad de añadir consultas
+ * específicas para Notificaciones.
+ *
+ * @author miguel.moreno
+ * @version 1.0
  */
 @Repository
 public interface NotificacionRepository extends JpaRepository<Notificacion, Integer> {

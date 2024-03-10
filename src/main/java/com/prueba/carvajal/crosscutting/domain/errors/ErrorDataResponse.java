@@ -8,10 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ErrorDataResponse
+ * ErrorDataResponse.
+ *
  * @author miguel.moreno
  * @version 1.0
- * @since 7-03-2024
+ * @since 2024-03-10
  */
 @Data
 @Builder

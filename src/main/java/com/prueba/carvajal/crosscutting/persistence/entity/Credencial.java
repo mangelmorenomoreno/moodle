@@ -8,13 +8,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Credencial.
+ *
+ * @author miguel.moreno
+ * @version 1.0
+ * @since 2024-03-10
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +36,7 @@ public class Credencial {
   private Integer credencialId;
 
   @Column(name = "hash_contraseña", nullable = false)
-  private String hashContraseña;
+  private String hashContrasena;
 
   @Column(name = "token_reset_password")
   private String tokenResetPassword;

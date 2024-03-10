@@ -21,7 +21,8 @@ import lombok.Setter;
  * Entidad que representa una publicación hecha por un usuario.
  * Está mapeada a la tabla 'publicaciones' en la base de datos.
  * Contiene información como el título, contenido, usuario que la hizo y la fecha de publicación.
- * Publicacion
+ *
+ *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024

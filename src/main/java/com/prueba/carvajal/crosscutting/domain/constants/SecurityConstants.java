@@ -4,10 +4,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 /**
- * llaves para generar los tokens jwt en los ambientes como dev test, stage y prod se debe
- * relacionar a la carpeta config y sus manifiestos correspondientes
+ * SecurityConstants.
  *
- * @author wilcorav
+ * @author miguel.moreno
+ * @version 1.0
+ * @since 2024-03-10
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityConstants {

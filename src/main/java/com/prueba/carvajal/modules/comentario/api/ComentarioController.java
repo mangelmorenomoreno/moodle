@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * ComentarioController
+ * ComentarioController.
+ *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024
@@ -22,7 +23,6 @@ public class ComentarioController {
 
   @Autowired
   private ComentarioDataProviders comentarioDataProviders;
-
 
 
 }

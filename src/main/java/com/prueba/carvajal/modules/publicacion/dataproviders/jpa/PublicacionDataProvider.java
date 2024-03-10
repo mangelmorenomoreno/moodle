@@ -1,12 +1,13 @@
 package com.prueba.carvajal.modules.publicacion.dataproviders.jpa;
 
-import com.prueba.carvajal.modules.publicacion.dataproviders.IPublicacionDataProvider;
+import com.prueba.carvajal.modules.publicacion.dataproviders.IpublicacionDataProvider;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 
 /**
- * PublicacionDataProvider
+ * PublicacionDataProvider.
+ *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024
@@ -14,5 +15,5 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-public class PublicacionDataProvider implements IPublicacionDataProvider {
+public class PublicacionDataProvider implements IpublicacionDataProvider {
 }

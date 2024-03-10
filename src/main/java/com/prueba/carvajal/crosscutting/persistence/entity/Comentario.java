@@ -23,6 +23,7 @@ import lombok.Setter;
  * Está mapeada a la tabla 'comentarios' en la base de datos.
  * Incluye el contenido del comentario, la publicación a la que pertenece y el usuario que lo hizo.
  * Comentario
+ *
  * @author miguel.moreno
  * @version 1.0
  * @since 7-03-2024

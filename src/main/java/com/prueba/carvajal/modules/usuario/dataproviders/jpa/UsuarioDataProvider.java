@@ -2,15 +2,14 @@ package com.prueba.carvajal.modules.usuario.dataproviders.jpa;
 
 import com.prueba.carvajal.crosscutting.persistence.entity.Usuario;
 import com.prueba.carvajal.crosscutting.persistence.repository.UsuarioRepository;
-import com.prueba.carvajal.modules.usuario.dataproviders.IUsuarioDataProvider;
-
+import com.prueba.carvajal.modules.usuario.dataproviders.IusuarioDataProvider;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * UsuarioDataProvider
+ * UsuarioDataProvider.
  *
  * @author miguel.moreno
  * @version 1.0
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Log4j2
 @Service
-public class UsuarioDataProvider implements IUsuarioDataProvider {
+public class UsuarioDataProvider implements IusuarioDataProvider {
 
   private final UsuarioRepository usuarioRepository;
 

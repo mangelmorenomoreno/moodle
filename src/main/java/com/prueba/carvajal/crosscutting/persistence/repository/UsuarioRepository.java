@@ -9,7 +9,11 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Repositorio JPA para la entidad Usuario.
- * Proporciona operaciones CRUD automáticas y capacidad para definir consultas personalizadas para Usuarios.
+ * Proporciona operaciones CRUD automáticas y capacidad para definir consultas personalizadas
+ * para Usuarios.
+ *
+ * @author miguel.moreno
+ * @version 1.0
  */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
@@ -17,7 +21,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
   public Usuario findByCorreoElectronico(String correoElectronico);
 
-  @Query("SELECT u FROM Usuario u WHERE u.nombre LIKE %:valor% OR u.apellido LIKE %:valor%  OR u.correoElectronico LIKE %:valor%")
+  @Query("SELECT u FROM Usuario u WHERE u.nombre LIKE %:valor% OR u.apellido LIKE %:valor%  "
+           + "OR u.correoElectronico LIKE %:valor%")
   public List<Usuario> findByNombreAndCorreoElectronicoSimilar(@Param("valor") String valor);
 
 }

@@ -3,7 +3,7 @@ package com.prueba.carvajal.modules.sendmail.usecase.message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba.carvajal.crosscutting.domain.dto.user.UserModelMacro;
-import com.prueba.carvajal.modules.credencial.dataproviders.ICredencialDataProvider;
+import com.prueba.carvajal.modules.credencial.dataproviders.IcredencialDataProvider;
 import com.prueba.carvajal.modules.sendmail.usecase.email.EmailService;
 import jakarta.jms.JMSException;
 import jakarta.jms.TextMessage;
@@ -14,11 +14,19 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
+/**
+ * EmailService.
+ *
+ * @author miguel.moreno
+ * @version 1.0
+ * @since 7-03-2024
+ */
 @Service
 public class MessageSenderService {
 
 
-  private JmsTemplate jmsTemplate;
+  @Autowired
+  private JmsTemplate jmsTemplates;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -27,13 +35,21 @@ public class MessageSenderService {
   private EmailService emailService;
 
   @Autowired
-  private ICredencialDataProvider iCredencialDataProvider;
+  private IcredencialDataProvider icredencialDataProvider;
 
   public void sendMessage(String destination, UserModelMacro userModelMacro) {
-    jmsTemplate.convertAndSend(destination, serializeUserModelMacro(userModelMacro));
+    jmsTemplates.convertAndSend(destination, serializeUserModelMacro(userModelMacro));
   }
 
-
+  /**
+   * Convierte un objeto UserModelMacro en su representación de cadena en formato JSON.
+   * Utiliza el objeto objectMapper para la serialización. Si ocurre una excepción durante el
+   * proceso, se lanza una RuntimeException.
+   *
+   * @param userModelMacro El objeto UserModelMacro a ser serializado.
+   * @return Una cadena que representa al objeto UserModelMacro en formato JSON.
+   * @throws RuntimeException Si se produce un error durante la serialización.
+   */
   public String serializeUserModelMacro(UserModelMacro userModelMacro) {
     try {
       return objectMapper.writeValueAsString(userModelMacro);
@@ -42,23 +58,42 @@ public class MessageSenderService {
     }
   }
 
+  /**
+   * Escucha los mensajes en la cola JMS destinada a la activación de usuarios y realiza el
+   * proceso correspondiente. Si el mensaje es del tipo TextMessage, deserializa el contenido a un
+   * objeto UserModelMacro y procede a enviar un correo electrónico de activación utilizando el
+   * servicio de correo electrónico.
+   *
+   * @param message El mensaje JMS recibido de la cola de activación.
+   * @throws JMSException Si ocurre un problema al manejar el mensaje JMS.
+   * @throws IOException Si se produce un error durante la deserialización del mensaje.
+   */
   @JmsListener(destination = "${integration.queues.activate}")
   public void activateUser(Message message) throws JMSException, IOException {
     if (message instanceof TextMessage) {
       UserModelMacro userModelMacro = deserializeMessage((TextMessage) message);
       emailService.sendActivateEmail(
-          iCredencialDataProvider.findByUserId(userModelMacro.getUserId())
+          icredencialDataProvider.findByUserId(userModelMacro.getUserId())
       );
     }
   }
 
-
+  /**
+   * Maneja los mensajes JMS en la cola destinada a la recuperación de contraseñas. Al recibir un
+   * mensaje del tipo TextMessage, lo deserializa para obtener un objeto UserModelMacro y utiliza
+   * este para invocar el envío de un correo electrónico para la recuperación de contraseña a través
+   * del servicio de correo electrónico.
+   *
+   * @param message El mensaje JMS recibido de la cola de recuperación de contraseña.
+   * @throws JMSException Si se produce un error en el manejo del mensaje JMS.
+   * @throws IOException Si se produce un error durante la deserialización del mensaje.
+   */
   @JmsListener(destination = "${integration.queues.recuperarPassword}")
   public void enviarEmailRecuperar(Message message) throws JMSException, IOException {
     if (message instanceof TextMessage) {
       UserModelMacro userModelMacro = deserializeMessage((TextMessage) message);
       emailService.sendRecuperarPassword(
-          iCredencialDataProvider.findByUserId(userModelMacro.getUserId())
+          icredencialDataProvider.findByUserId(userModelMacro.getUserId())
       );
     }
   }
