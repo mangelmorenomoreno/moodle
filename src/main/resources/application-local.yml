@@ -1,8 +1,26 @@
 ---
 server:
   port: 8000
-
+logging:
+  level:
+    org:
+      springframework: DEBUG
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: miguel333mmm@gmail.com
+    password: vbsrcmmirbkkpauk
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
   jpa:
     properties:
       hibernate.jdbc.lob.non_contextual_creation: false
@@ -29,4 +47,5 @@ integration:
     maxConnections: 8
     concurrentConsumers: 10
   queues:
-    settlement: facetime
+    activate: activate
+    recuperarPassword: resetpassword
