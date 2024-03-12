@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author miguel.moreno
  * @version 1.0
- * @since 2024-03-06
+ * @since 2024-03-07
  */
 
 @Configuration
@@ -22,7 +22,7 @@ public class DatasourceConfiguration {
 
   @Bean(name = JPA_DATASOURCE)
   @ConfigurationProperties(prefix = "spring.datasource.carvajal")
-  public DataSource dataSourceEbusiness() {
+  public DataSource dataSourceCarvajal() {
     return DataSourceBuilder.create().build();
   }
 
