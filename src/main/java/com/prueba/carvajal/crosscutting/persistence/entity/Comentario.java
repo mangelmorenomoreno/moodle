@@ -22,7 +22,7 @@ import lombok.Setter;
  * Entidad que representa un comentario en una publicación.
  * Está mapeada a la tabla 'comentarios' en la base de datos.
  * Incluye el contenido del comentario, la publicación a la que pertenece y el usuario que lo hizo.
- * Comentario
+ * ComentarioDto
  *
  * @author miguel.moreno
  * @version 1.0
@@ -56,8 +56,5 @@ public class Comentario {
   @Temporal(TemporalType.TIMESTAMP)
   private Date fechaComentario;
 
-  @ManyToOne
-  @JoinColumn(name = "comment_parent_id", nullable = true)
-  private Comentario comentarioPadre;
 
 }

@@ -1,11 +1,13 @@
 package com.prueba.carvajal.crosscutting.persistence.repository;
 
 import com.prueba.carvajal.crosscutting.persistence.entity.Comentario;
+import com.prueba.carvajal.crosscutting.persistence.entity.Publicacion;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repositorio JPA para la entidad Comentario.
+ * Repositorio JPA para la entidad ComentarioDto.
  * Facilita operaciones CRUD y permite definir consultas específicas relacionadas con Comentarios.
  *
  * @author miguel.moreno
@@ -15,5 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComentarioRepository extends JpaRepository<Comentario, Integer> {
 
+  List<Comentario> findByPublicacion(Publicacion publicacion);
 
+  List<Comentario> findByCommentId(Integer commentId);
 }

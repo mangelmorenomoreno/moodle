@@ -66,8 +66,8 @@ public class UsuarioController {
     return ResponseEntityUtil.createSuccessfulResponse(
       ResponseValueConstants.SUCCESS,
       usuarioService.getFindByUserId(token),
-      MessageCodes.GET_USER_PROFILE_001.getMessage(),
-      MessageCodes.GET_USER_PROFILE_001.name());
+      MessageCodes.PROCESS_SUCCES.getMessage(),
+      MessageCodes.PROCESS_SUCCES.name());
   }
 
   /**
@@ -90,8 +90,8 @@ public class UsuarioController {
     return ResponseEntityUtil.createSuccessfulResponse(
       ResponseValueConstants.SUCCESS,
       usuarioService.findByCorreoElectronico(email),
-      MessageCodes.GET_USER_PROFILE_001.getMessage(),
-      MessageCodes.GET_USER_PROFILE_001.name());
+      MessageCodes.PROCESS_SUCCES.getMessage(),
+      MessageCodes.PROCESS_SUCCES.name());
   }
 
   /**
@@ -114,8 +114,8 @@ public class UsuarioController {
     return ResponseEntityUtil.createSuccessfulResponse(
       ResponseValueConstants.SUCCESS,
       usuarioService.save(basicInformationUserDto),
-      MessageCodes.GET_USER_PROFILE_001.getMessage(),
-      MessageCodes.GET_USER_PROFILE_001.name());
+      MessageCodes.PROCESS_SUCCES.getMessage(),
+      MessageCodes.PROCESS_SUCCES.name());
   }
 
   /**
@@ -140,8 +140,8 @@ public class UsuarioController {
     return ResponseEntityUtil.createSuccessfulResponse(
       ResponseValueConstants.SUCCESS,
       usuarioService.update(basicInformationUserDto, token),
-      MessageCodes.GET_USER_PROFILE_001.getMessage(),
-      MessageCodes.GET_USER_PROFILE_001.name());
+      MessageCodes.PROCESS_SUCCES.getMessage(),
+      MessageCodes.PROCESS_SUCCES.name());
   }
 
   /**
@@ -162,8 +162,8 @@ public class UsuarioController {
     return ResponseEntityUtil.createSuccessfulResponse(
       ResponseValueConstants.SUCCESS,
       usuarioService.findByNombreAndCorreoLike(valor),
-      MessageCodes.GET_USER_PROFILE_001.getMessage(),
-      MessageCodes.GET_USER_PROFILE_001.name());
+      MessageCodes.PROCESS_SUCCES.getMessage(),
+      MessageCodes.PROCESS_SUCCES.name());
   }
 
 

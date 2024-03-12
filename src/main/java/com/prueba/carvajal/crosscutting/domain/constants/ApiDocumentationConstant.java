@@ -16,6 +16,34 @@ public class ApiDocumentationConstant {
 
   public static final String CONSULTAR_USUARIO_NOTES = "Consulta la informacion del usuario";
   public static final String CREAR_USUARIO_NOTES = "Crear usuario";
+  public static final String CREAR_PUBLICACION_NOTES = "Crear publicacion";
+  public static final String CREAR_PUBLICACION_VALUE = "publicacionDto, token";
+  public static final String CREAR_PUBLICACION_NICK = "new publicacion";
+  public static final String CREAR_COMENTARIO_NOTES = "Crear publicacion";
+  public static final String CREAR_COMENTARIO_VALUE = "publicacionDto, token";
+  public static final String CREAR_COMENTARIO_NICK = "new publicacion";
+
+  public static final String ELIMINAR_COMENTARIO_NOTES = "Eliminar publicacion";
+  public static final String ELIMINAR_COMENTARIO_VALUE = "publicacionDto, token";
+  public static final String ELIMINAR_COMENTARIO_NICK = "Eliminar publicacion";
+  public static final String ELIMINAR_PUBLICACION_NOTES = "Crear publicacion";
+  public static final String ELIMINAR_PUBLICACION_VALUE = "publicacionDto, token";
+  public static final String ELIMINAR_PUBLICACION_NICK = "new publicacion";
+  public static final String ACTUALIZAR_PUBLICACION_NOTES = "Modificar publicacion";
+  public static final String ACTUALIZAR_PUBLICACION_VALUE = "publicacionDto, token";
+  public static final String ACTUALIZAR_PUBLICACION_NICK = "actualizar publicacion";
+  public static final String LISTAR_PUBLICACION_NOTES = "Listar publicacion";
+  public static final String LISTAR_PUBLICACION_VALUE = "token";
+  public static final String LISTAR_PUBLICACION_NICK = "list publicacion";
+
+
+  public static final String LISTAR_COMENTARIO_NOTES = "Listar comentarios";
+  public static final String LISTAR_COMENTARIO_VALUE = "token";
+  public static final String LISTAR_COMENTARIO_NICK = "list comentarios";
+
+  public static final String GUARDAR_COMENTARIO_NOTES = "Guardar comentarios";
+  public static final String GUARDAR_COMENTARIO_VALUE = "token";
+  public static final String GUARDAR_COMENTARIO_NICK = "Guardar comentarios";
   public static final String ACTUALIZAR_USUARIO_NOTES = "Modificar usuario";
   public static final String CONSULTAR_USUARIO_CORREO_NOTES = "Consulta la informacion del "
                                                                 + "usuario por correo";

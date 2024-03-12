@@ -52,6 +52,7 @@ dependencies {
 	implementation 'org.springframework.integration:spring-integration-jms'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.3'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq', version: '3.2.3'
+	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }
 
 dependencyManagement {
