@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import com.prueba.carvajal.crosscutting.domain.dto.publicacion.PublicacionDto;
-import com.prueba.carvajal.crosscutting.patterns.IrestResponse;
-import com.prueba.carvajal.crosscutting.persistence.entity.Publicacion;
-import com.prueba.carvajal.modules.publicacion.usecase.PublicacionService;
+import com.ucundinamarca.crosscutting.domain.dto.publicacion.PublicacionDto;
+import com.ucundinamarca.crosscutting.patterns.IrestResponse;
+import com.ucundinamarca.crosscutting.persistence.entity.Publicacion;
+import com.ucundinamarca.modules.publicacion.api.PublicacionController;
+import com.ucundinamarca.modules.publicacion.usecase.PublicacionService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

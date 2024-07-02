@@ -6,8 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.prueba.carvajal.crosscutting.persistence.entity.Credencial;
-import com.prueba.carvajal.crosscutting.persistence.entity.Usuario;
+import com.ucundinamarca.crosscutting.persistence.entity.Credencial;
+import com.ucundinamarca.crosscutting.persistence.entity.Usuario;
+import com.ucundinamarca.modules.sendmail.usecase.email.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

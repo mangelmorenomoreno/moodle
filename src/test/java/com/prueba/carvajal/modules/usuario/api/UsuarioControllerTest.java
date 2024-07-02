@@ -6,11 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import com.prueba.carvajal.crosscutting.domain.dto.user.BasicInformationUserDto;
-import com.prueba.carvajal.crosscutting.patterns.IrestResponse;
-import com.prueba.carvajal.crosscutting.persistence.entity.Usuario;
-import com.prueba.carvajal.modules.sendmail.usecase.message.MessageSenderService;
-import com.prueba.carvajal.modules.usuario.usecase.UsuarioService;
+import com.ucundinamarca.crosscutting.domain.dto.user.BasicInformationUserDto;
+import com.ucundinamarca.crosscutting.patterns.IrestResponse;
+import com.ucundinamarca.crosscutting.persistence.entity.Usuario;
+import com.ucundinamarca.modules.sendmail.usecase.message.MessageSenderService;
+import com.ucundinamarca.modules.usuario.api.UsuarioController;
+import com.ucundinamarca.modules.usuario.usecase.UsuarioService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

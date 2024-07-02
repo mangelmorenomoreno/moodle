@@ -7,11 +7,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.prueba.carvajal.crosscutting.persistence.entity.Comentario;
-import com.prueba.carvajal.crosscutting.persistence.entity.RespuestaComentario;
-import com.prueba.carvajal.crosscutting.persistence.repository.RespuestaComentarioRepository;
+import com.ucundinamarca.crosscutting.persistence.entity.Comentario;
+import com.ucundinamarca.crosscutting.persistence.entity.RespuestaComentario;
+import com.ucundinamarca.crosscutting.persistence.repository.RespuestaComentarioRepository;
 import java.util.List;
 import java.util.Optional;
+
+import com.ucundinamarca.modules.respuestacomentario.dataproviders.jpa.RespuestaComentarioDataProviders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

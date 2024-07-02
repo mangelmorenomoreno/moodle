@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.prueba.carvajal.crosscutting.persistence.entity.Publicacion;
-import com.prueba.carvajal.crosscutting.persistence.entity.Usuario;
-import com.prueba.carvajal.crosscutting.persistence.repository.PublicacionRepository;
+import com.ucundinamarca.crosscutting.persistence.entity.Publicacion;
+import com.ucundinamarca.crosscutting.persistence.entity.Usuario;
+import com.ucundinamarca.crosscutting.persistence.repository.PublicacionRepository;
 import java.util.List;
+
+import com.ucundinamarca.modules.publicacion.dataproviders.jpa.PublicacionDataProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

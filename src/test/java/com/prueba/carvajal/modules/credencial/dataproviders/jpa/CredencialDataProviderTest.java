@@ -4,9 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.prueba.carvajal.crosscutting.persistence.entity.Credencial;
-import com.prueba.carvajal.crosscutting.persistence.repository.CredencialRepository;
+import com.ucundinamarca.crosscutting.persistence.entity.Credencial;
+import com.ucundinamarca.crosscutting.persistence.repository.CredencialRepository;
 import java.util.Optional;
+
+import com.ucundinamarca.modules.credencial.dataproviders.jpa.CredencialDataProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

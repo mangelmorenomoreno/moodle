@@ -8,9 +8,10 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.prueba.carvajal.crosscutting.domain.dto.user.UserModelMacro;
-import com.prueba.carvajal.modules.credencial.dataproviders.IcredencialDataProvider;
-import com.prueba.carvajal.modules.sendmail.usecase.email.EmailService;
+import com.ucundinamarca.crosscutting.domain.dto.user.UserModelMacro;
+import com.ucundinamarca.modules.credencial.dataproviders.IcredencialDataProvider;
+import com.ucundinamarca.modules.sendmail.usecase.email.EmailService;
+import com.ucundinamarca.modules.sendmail.usecase.message.MessageSenderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

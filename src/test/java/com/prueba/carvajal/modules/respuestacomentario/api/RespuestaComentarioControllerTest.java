@@ -5,10 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import com.prueba.carvajal.crosscutting.domain.dto.respuesta.RespuestaComentarioDto;
-import com.prueba.carvajal.crosscutting.patterns.IrestResponse;
-import com.prueba.carvajal.crosscutting.persistence.entity.RespuestaComentario;
-import com.prueba.carvajal.modules.respuestacomentario.usecase.RespuestaComentarioService;
+import com.ucundinamarca.crosscutting.domain.dto.respuesta.RespuestaComentarioDto;
+import com.ucundinamarca.crosscutting.patterns.IrestResponse;
+import com.ucundinamarca.crosscutting.persistence.entity.RespuestaComentario;
+import com.ucundinamarca.modules.respuestacomentario.api.RespuestaComentarioController;
+import com.ucundinamarca.modules.respuestacomentario.usecase.RespuestaComentarioService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
