@@ -11,7 +11,7 @@ import java.sql.SQLException;
 @Repository
 public class ReporteadorRepository {
 
-    @Autowired
+   /* @Autowired
     @Qualifier("reporteadorJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
     public List<SomeDTO> findAll() {
@@ -25,5 +25,5 @@ public class ReporteadorRepository {
                 return dto;
             }
         });
-    }
+    }*/
 }

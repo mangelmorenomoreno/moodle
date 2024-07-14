@@ -14,7 +14,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ControllerConstants {
   public static final String RESPUESTA_COMENTARIO_URL = "respuestaComentario";
-  public static final String USUARIO_URL = "usuario";
+  public static final String USUARIO_URL = "usuarioMoodle";
+  public static final String REPORTEADOR_URL = "reporteador";
+  public static final String MATRICULAMOODLE_URL = "matricula";
+  public static final String NOTASMOODLE_URL = "notas";
+  public static final String INSTANCIA_URL = "instancia";
+  public static final String GRUPOSEMILLA_URL = "reporteador";
+  public static final String TIPOUSUARIO_URL = "tipoUsuario";
+  public static final String SEMILLAMOODLE_URL = "semillaMoodle";
+
+
   public static final String RESTABLECER_PASSWORD_URL = "resetPassword/{email}";
 
   public static final String ACTUALIZAR_CREDENCIAL_URL = "update";

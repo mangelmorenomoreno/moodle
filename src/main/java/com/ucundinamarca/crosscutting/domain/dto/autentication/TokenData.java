@@ -1,9 +1,9 @@
 package com.ucundinamarca.crosscutting.domain.dto.autentication;
 
 
-import com.ucundinamarca.crosscutting.persistence.entity.Usuario;
 import java.io.Serializable;
 
+import com.ucundinamarca.crosscutting.persistence.entity.camposdeaprendizaje.UsuarioMoodle;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +23,6 @@ import lombok.NoArgsConstructor;
 public class TokenData implements Serializable {
 
   private static final long serialVersionUID = -7029122565299646442L;
-  Usuario usuario;
+  UsuarioMoodle usuario;
   Long expirationTime;
 }

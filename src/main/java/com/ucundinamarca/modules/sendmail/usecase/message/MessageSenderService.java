@@ -3,7 +3,6 @@ package com.ucundinamarca.modules.sendmail.usecase.message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ucundinamarca.crosscutting.domain.dto.user.UserModelMacro;
-import com.ucundinamarca.modules.credencial.dataproviders.IcredencialDataProvider;
 import com.ucundinamarca.modules.sendmail.usecase.email.EmailService;
 import jakarta.jms.JMSException;
 import jakarta.jms.TextMessage;
@@ -33,9 +32,6 @@ public class MessageSenderService {
 
   @Autowired
   private EmailService emailService;
-
-  @Autowired
-  private IcredencialDataProvider icredencialDataProvider;
 
   public void sendMessage(String destination, UserModelMacro userModelMacro) {
     jmsTemplates.convertAndSend(destination, serializeUserModelMacro(userModelMacro));
@@ -68,7 +64,7 @@ public class MessageSenderService {
    * @throws JMSException Si ocurre un problema al manejar el mensaje JMS.
    * @throws IOException Si se produce un error durante la deserialización del mensaje.
    */
-  @JmsListener(destination = "${integration.queues.activate}")
+  /*@JmsListener(destination = "${integration.queues.activate}")
   public void activateUser(Message message) throws JMSException, IOException {
     if (message instanceof TextMessage) {
       UserModelMacro userModelMacro = deserializeMessage((TextMessage) message);
@@ -77,6 +73,8 @@ public class MessageSenderService {
       );
     }
   }
+
+   */
 
   /**
    * Maneja los mensajes JMS en la cola destinada a la recuperación de contraseñas. Al recibir un
@@ -88,6 +86,8 @@ public class MessageSenderService {
    * @throws JMSException Si se produce un error en el manejo del mensaje JMS.
    * @throws IOException Si se produce un error durante la deserialización del mensaje.
    */
+  /*
+
   @JmsListener(destination = "${integration.queues.recuperarPassword}")
   public void enviarEmailRecuperar(Message message) throws JMSException, IOException {
     if (message instanceof TextMessage) {
@@ -97,6 +97,8 @@ public class MessageSenderService {
       );
     }
   }
+
+   */
 
   private UserModelMacro deserializeMessage(TextMessage textMessage)
       throws IOException, JMSException {

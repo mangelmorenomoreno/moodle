@@ -1,7 +1,7 @@
 package com.ucundinamarca.modules.sendmail.usecase.email;
 
 import com.ucundinamarca.crosscutting.domain.constants.ApiDocumentationConstant;
-import com.ucundinamarca.crosscutting.persistence.entity.Credencial;
+import com.ucundinamarca.crosscutting.domain.dto.autentication.UsuarioDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -33,10 +33,10 @@ public class EmailService {
    *
    * @param credencial La credencial del usuario a quien se le enviará el correo de activación.
    */
-  public void sendActivateEmail(Credencial credencial) {
+  public void sendActivateEmail(UsuarioDto credencial) {
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom(emailFrom);
-    message.setTo(credencial.getUsuario().getCorreoElectronico());
+    message.setTo(credencial.getEmail());
     message.setSubject(ApiDocumentationConstant.ACTIVATE_USER);
     message.setText(crearContenidoCorreoActivacion(credencial));
     mailSender.send(message);
@@ -50,22 +50,22 @@ public class EmailService {
    *
    * @param credencial La credencial del usuario que necesita recuperar su contraseña.
    */
-  public void sendRecuperarPassword(Credencial credencial) {
+  public void sendRecuperarPassword(UsuarioDto credencial) {
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom(emailFrom);
-    message.setTo(credencial.getUsuario().getCorreoElectronico());
+    message.setTo(credencial.getEmail());
     message.setSubject(ApiDocumentationConstant.ACTIVATE_USER);
     message.setText(crearContenidoCorreoRecuperacionContrasena(credencial));
     mailSender.send(message);
   }
 
-  private String crearContenidoCorreoActivacion(Credencial credencial) {
-    return "Hola " + credencial.getUsuario().getNombre() + " "
-             + credencial.getUsuario().getApellido() + ",\n\n"
+  private String crearContenidoCorreoActivacion(UsuarioDto credencial) {
+    return "Hola "
+             + credencial.getName() + ",\n\n"
              + "¡Gracias por registrarte en nuestra plataforma! Estás a solo un paso de activar tu"
              + " cuenta y comenzar a usar nuestros servicios.\n\n"
              + "Por favor, activa tu cuenta haciendo clic en el siguiente enlace:  \n"
-             + "http://localhost:4200/reset-password?token=" + credencial.getTokenResetPassword()
+             + "http://localhost:4200/reset-password?token=" + credencial.getId()
              + " Si tienes alguna pregunta, no dudes en contactarnos en " + emailFrom + ".\n\n"
              + "Si no te registraste en nuestra plataforma, por favor ignora este mensaje.\n\n"
              + "Gracias,\n"
@@ -83,14 +83,14 @@ public class EmailService {
    *                   correo.
    * @return Un String con el texto completo del mensaje de correo electrónico de activación.
    */
-  public String crearContenidoCorreoRecuperacionContrasena(Credencial credencial) {
-    return "Hola " + credencial.getUsuario().getNombre() + " "
-             + credencial.getUsuario().getApellido() + ",\n\n"
+  public String crearContenidoCorreoRecuperacionContrasena(UsuarioDto credencial) {
+    return "Hola " + credencial.getName() + " "
+             +  ",\n\n"
              + "Hemos recibido una solicitud para restablecer tu contraseña."
              + " Si no solicitaste esto, "
              + "por favor ignora este correo. De lo contrario, puedes restablecer tu contraseña "
              + "utilizando el siguiente enlace:\n\n"
-             + "http://localhost:4200/reset-password?token=" + credencial.getTokenResetPassword()
+             + "http://localhost:4200/reset-password?token="
              + " Este enlace solo será válido por un período limitado de tiempo.\n\n"
              + " Si tienes problemas para restablecer tu contraseña o no solicitaste este cambio, "
              + "por favor contacta a nuestro equipo de soporte "
