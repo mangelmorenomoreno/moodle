@@ -22,10 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ControllerConstants.REPORTEADOR_URL)
 public class RolMoodleController {
 
-    @Autowired
-    private RolMoodleService rolMoodleService;
-
-
+  @Autowired
+  private RolMoodleService rolMoodleService;
 
 
 }

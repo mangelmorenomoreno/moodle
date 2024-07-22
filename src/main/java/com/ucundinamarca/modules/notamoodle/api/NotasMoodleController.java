@@ -24,9 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotasMoodleController {
 
 
-    @Autowired
-    private NotasMoodleService notasMoodleService;
-
+  @Autowired
+  private NotasMoodleService jpaNotasMoodleService;
 
 
 }

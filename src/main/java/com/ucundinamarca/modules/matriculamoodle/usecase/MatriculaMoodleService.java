@@ -1,7 +1,7 @@
 package com.ucundinamarca.modules.matriculamoodle.usecase;
 
-import com.ucundinamarca.modules.matriculamoodle.dataproviders.IMatriculaMoodleDataProviders;
-import com.ucundinamarca.modules.reporteador.dataproviders.IReporteadorDataProviders;
+import com.ucundinamarca.modules.matriculamoodle.dataproviders.ImatriculaMoodleDataProviders;
+import com.ucundinamarca.modules.reporteador.dataproviders.IreporteadorDataProviders;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class MatriculaMoodleService {
 
-    @Autowired
-    private IMatriculaMoodleDataProviders iMatriculaMoodleDataProviders;
+  @Autowired
+  private ImatriculaMoodleDataProviders imatriculaMoodleDataProviders;
 
 
-    @Autowired
-    private IReporteadorDataProviders iReporteadorDataProviders;
+  @Autowired
+  private IreporteadorDataProviders ireporteadorDataProviders;
 
 }

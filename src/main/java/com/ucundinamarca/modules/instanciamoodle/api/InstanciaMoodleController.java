@@ -25,11 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ControllerConstants.INSTANCIA_URL)
 public class InstanciaMoodleController {
 
-    @Autowired
-    private InstanciaMoodleService instanciaMoodleService;
-
-
-
+  @Autowired
+  private InstanciaMoodleService instanciaMoodleService;
 
 
 }

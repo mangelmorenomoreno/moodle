@@ -1,11 +1,16 @@
 # Proyecto de Automatización de Migración a Moodle
 
 ## Descripción
-Este proyecto tiene como objetivo automatizar la migración de la plataforma de la universidad a Moodle mediante el desarrollo de web services. Estos servicios permiten automatizar procesos clave como la creación de grupos, creación de usuarios, matrícula, desmatrícula de grupos y extracción de notas.
+
+Este proyecto tiene como objetivo automatizar la migración de la plataforma de la universidad a
+Moodle mediante el desarrollo de web services. Estos servicios permiten automatizar procesos clave
+como la creación de grupos, creación de usuarios, matrícula, desmatrícula de grupos y extracción de
+notas.
 
 ## Características
 
 ### 1. Creación de Grupos
+
 - **Funcionalidad:** Permite la creación automática de grupos en Moodle.
 - **Características Específicas:**
     - Definición de nombres y descripciones de los grupos.
@@ -13,13 +18,16 @@ Este proyecto tiene como objetivo automatizar la migración de la plataforma de 
     - Configuración de roles dentro de los grupos.
 
 ### 2. Creación de Usuarios
-- **Funcionalidad:** Automatiza la creación de perfiles de usuarios (estudiantes y docentes) en Moodle.
+
+- **Funcionalidad:** Automatiza la creación de perfiles de usuarios (estudiantes y docentes) en
+  Moodle.
 - **Características Específicas:**
     - Importación de datos de usuarios desde la base de datos de la universidad.
     - Asignación de roles y permisos correspondientes.
     - Envío de notificaciones a los usuarios creados con sus credenciales.
 
 ### 3. Matrícula de Estudiantes y Docentes
+
 - **Funcionalidad:** Automatiza la inscripción de estudiantes y docentes en cursos y grupos.
 - **Características Específicas:**
     - Inscripción masiva de usuarios en cursos.
@@ -27,20 +35,25 @@ Este proyecto tiene como objetivo automatizar la migración de la plataforma de 
     - Soporte para matrículas en múltiples cursos y grupos temáticos.
 
 ### 4. Desmatrícula de Grupos
-- **Funcionalidad:** Permite la eliminación automatizada de estudiantes y docentes de los grupos y cursos.
+
+- **Funcionalidad:** Permite la eliminación automatizada de estudiantes y docentes de los grupos y
+  cursos.
 - **Características Específicas:**
     - Eliminación masiva de usuarios de cursos y grupos.
     - Mantenimiento de registros históricos de desmatrículas.
     - Generación de reportes de desmatrícula.
 
 ### 5. Extracción de Notas
-- **Funcionalidad:** Facilita la exportación de notas y calificaciones de los estudiantes desde Moodle.
+
+- **Funcionalidad:** Facilita la exportación de notas y calificaciones de los estudiantes desde
+  Moodle.
 - **Características Específicas:**
     - Exportación de calificaciones en diferentes formatos (CSV, Excel, etc.).
     - Integración con sistemas de gestión académica para la sincronización de notas.
     - Generación de reportes detallados de desempeño académico.
 
 ## Beneficios de la Automatización
+
 - **Eficiencia:** Reducción del tiempo y esfuerzo necesarios para realizar estas tareas manualmente.
 - **Precisión:** Minimización de errores humanos en el proceso de migración y gestión.
 - **Consistencia:** Aseguramiento de que todos los datos y procesos sigan un estándar uniforme.
@@ -608,11 +621,13 @@ Instrucciones para ejecutar la aplicación.
 
 ## Documentación API
 
-La documentación de la API está disponible en: `http://localhost:8000/ucundinamarca/api/v1swagger-ui/index.html`
+La documentación de la API está disponible
+en: `http://localhost:8000/ucundinamarca/api/v1swagger-ui/index.html`
 
 ## Estrategia de Ramificación
 
-Se utiliza GitFlow como estrategia de ramificación. Por favor, revisa el flujo de ramas para contribuir al proyecto.
+Se utiliza GitFlow como estrategia de ramificación. Por favor, revisa el flujo de ramas para
+contribuir al proyecto.
 
 ## Pruebas
 
@@ -622,7 +637,8 @@ Se utiliza GitFlow como estrategia de ramificación. Por favor, revisa el flujo 
 
 ## Contribuir
 
-Para contribuir al proyecto, por favor sigue las instrucciones de ramificación y envía Pull Requests para revisión.
+Para contribuir al proyecto, por favor sigue las instrucciones de ramificación y envía Pull Requests
+para revisión.
 
 ## Autores
 

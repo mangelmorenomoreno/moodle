@@ -6,9 +6,9 @@ import com.ucundinamarca.crosscutting.domain.response.ResponseStatus;
 /**
  * IrestResponse.
  *
+ * @param <T> The expected class of the value
  * @author miguel.moreno
  * @version 1.0
- * @param <T> The expected class of the value
  */
 public interface IrestResponse<T> {
   ResponseStatus getResponseStatus();

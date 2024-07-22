@@ -1,11 +1,12 @@
 package com.ucundinamarca.modules.instanciamoodle.dataproviders.jpa;
 
 
-import com.ucundinamarca.crosscutting.persistence.repository.InstanciaMoodleRepository;
-import com.ucundinamarca.modules.instanciamoodle.dataproviders.IInstanciaMoodleDataProviders;
+import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.repository.InstanciaMoodleRepository;
+import com.ucundinamarca.modules.instanciamoodle.dataproviders.IinstanciaMoodleDataProviders;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 /**
  * InstanciaMoodleDataProviders.
  *
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-public class InstanciaMoodleDataProviders implements IInstanciaMoodleDataProviders {
+public class InstanciaMoodleDataProviders implements IinstanciaMoodleDataProviders {
 
-    @Autowired
-    private InstanciaMoodleRepository instanciaMoodleRepository;
+  @Autowired
+  private InstanciaMoodleRepository jpaInstanciaMoodleRepository;
 
 }

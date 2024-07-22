@@ -43,11 +43,11 @@ public class ControllerConstants {
   public static final String COMENTARIO_URL = "comentario";
   public static final String INFORMACION_USUARIO_URL = "findByToken";
   public static final String INFORMACION_USUARIO_O_CORREO_URL = "findByData/{valor}";
+  public static final String USUARIO_PREGRADO = "usuariosMatricula";
   public static final String INFORMACION_USUARIO_CORREO_URL = "findByEmail/{email}";
   public static final String LOGIN = "login";
   public static final String NOTIFICACION_URL = "notificacion";
   public static final String PUBLICACION_URL = "publicacion";
-
 
 
 }

@@ -7,9 +7,7 @@ import com.ucundinamarca.modules.sendmail.usecase.email.EmailService;
 import jakarta.jms.JMSException;
 import jakarta.jms.TextMessage;
 import java.io.IOException;
-import org.apache.activemq.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
@@ -54,51 +52,6 @@ public class MessageSenderService {
     }
   }
 
-  /**
-   * Escucha los mensajes en la cola JMS destinada a la activación de usuarios y realiza el
-   * proceso correspondiente. Si el mensaje es del tipo TextMessage, deserializa el contenido a un
-   * objeto UserModelMacro y procede a enviar un correo electrónico de activación utilizando el
-   * servicio de correo electrónico.
-   *
-   * @param message El mensaje JMS recibido de la cola de activación.
-   * @throws JMSException Si ocurre un problema al manejar el mensaje JMS.
-   * @throws IOException Si se produce un error durante la deserialización del mensaje.
-   */
-  /*@JmsListener(destination = "${integration.queues.activate}")
-  public void activateUser(Message message) throws JMSException, IOException {
-    if (message instanceof TextMessage) {
-      UserModelMacro userModelMacro = deserializeMessage((TextMessage) message);
-      emailService.sendActivateEmail(
-          icredencialDataProvider.findByUserId(userModelMacro.getUserId())
-      );
-    }
-  }
-
-   */
-
-  /**
-   * Maneja los mensajes JMS en la cola destinada a la recuperación de contraseñas. Al recibir un
-   * mensaje del tipo TextMessage, lo deserializa para obtener un objeto UserModelMacro y utiliza
-   * este para invocar el envío de un correo electrónico para la recuperación de contraseña a través
-   * del servicio de correo electrónico.
-   *
-   * @param message El mensaje JMS recibido de la cola de recuperación de contraseña.
-   * @throws JMSException Si se produce un error en el manejo del mensaje JMS.
-   * @throws IOException Si se produce un error durante la deserialización del mensaje.
-   */
-  /*
-
-  @JmsListener(destination = "${integration.queues.recuperarPassword}")
-  public void enviarEmailRecuperar(Message message) throws JMSException, IOException {
-    if (message instanceof TextMessage) {
-      UserModelMacro userModelMacro = deserializeMessage((TextMessage) message);
-      emailService.sendRecuperarPassword(
-          icredencialDataProvider.findByUserId(userModelMacro.getUserId())
-      );
-    }
-  }
-
-   */
 
   private UserModelMacro deserializeMessage(TextMessage textMessage)
       throws IOException, JMSException {

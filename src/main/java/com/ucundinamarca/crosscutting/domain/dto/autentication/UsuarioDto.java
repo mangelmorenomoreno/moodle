@@ -21,8 +21,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UsuarioDto {
 
-    private String email;
-    private String name;
-    private String id;
+  private String email;
+  private String name;
+  private String id;
 
 }

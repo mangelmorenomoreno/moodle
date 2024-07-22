@@ -1,9 +1,8 @@
 package com.ucundinamarca.crosscutting.domain.dto.autentication;
 
 
+import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.UsuarioMoodle;
 import java.io.Serializable;
-
-import com.ucundinamarca.crosscutting.persistence.entity.camposdeaprendizaje.UsuarioMoodle;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

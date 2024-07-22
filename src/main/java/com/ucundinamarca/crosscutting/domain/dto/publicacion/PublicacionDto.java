@@ -4,6 +4,7 @@ package com.ucundinamarca.crosscutting.domain.dto.publicacion;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
 /**
  * PublicacionDto.
  *

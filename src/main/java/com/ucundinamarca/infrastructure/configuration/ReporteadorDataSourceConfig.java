@@ -1,56 +1,112 @@
 package com.ucundinamarca.infrastructure.configuration;
 
+import jakarta.persistence.EntityManagerFactory;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-
+/**
+ * Spring boot configuration for Datasource runtime.
+ * This configuration class sets up the DataSource, EntityManagerFactory,
+ * and TransactionManager for the Reporteador database.
+ * It also configures the JdbcTemplate for database operations.
+ */
 @Configuration
-@EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = "com.example.reporteador",
-        entityManagerFactoryRef = "reporteadorEntityManagerFactory",
-        transactionManagerRef = "reporteadorTransactionManager"
+    basePackages = "com.ucundinamarca.crosscutting.persistence.reporteador.repository",
+    entityManagerFactoryRef = "reporteadorEntityManagerFactory",
+    transactionManagerRef = "reporteadorTransactionManager"
 )
 public class ReporteadorDataSourceConfig {
 
-    @Bean(name = "reporteadorDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.reporteador")
-    public DataSource reporteadorDataSource() {
-        return DataSourceBuilder.create().build();
-    }
+  /**
+   * Creates and configures the DataSource for Reporteador.
+   *
+   * @return the configured DataSource
+   */
+  @Bean(name = "reporteadorDataSource")
+  @ConfigurationProperties(prefix = "spring.datasource.reporteador")
+  public DataSource reporteadorDataSource() {
+    return DataSourceBuilder.create().build();
+  }
 
-    @Bean(name = "reporteadorEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean reporteadorEntityManagerFactory(
-            @Qualifier("reporteadorDataSource") DataSource reporteadorDataSource) {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(reporteadorDataSource);
-        em.setPackagesToScan("com.example.reporteador");  // Cambia el paquete a donde están tus entidades de reporteador
+  /**
+   * Creates and configures the JdbcTemplate for Reporteador.
+   *
+   * @param dataSource the DataSource for Reporteador
+   * @return the configured JdbcTemplate
+   */
+  @Bean(name = "reporteadorJdbcTemplate")
+  public JdbcTemplate reporteadorJdbcTemplate(
+      @Qualifier("reporteadorDataSource") DataSource dataSource) {
+    return new JdbcTemplate(dataSource);
+  }
 
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaPropertyMap(new HashMap<String, Object>() {{
-            put("hibernate.hbm2ddl.auto", "none");
-            put("hibernate.dialect", "org.hibernate.dialect.Oracle12cDialect");
-        }});
+  /**
+   * Creates and configures the EntityManagerFactory for Reporteador.
+   *
+   * @param builder the EntityManagerFactoryBuilder
+   * @param dataSource the DataSource for Reporteador
+   * @return the configured LocalContainerEntityManagerFactoryBean
+   */
+  @Bean(name = "reporteadorEntityManagerFactory")
+  public LocalContainerEntityManagerFactoryBean reporteadorEntityManagerFactory(
+      EntityManagerFactoryBuilder builder,
+      @Qualifier("reporteadorDataSource") DataSource dataSource) {
+    return builder
+        .dataSource(dataSource)
+        .packages("com.ucundinamarca.crosscutting.persistence.reporteador.entity")
+        .persistenceUnit("reporteador")
+        .properties(hibernateProperties())
+        .build();
+  }
 
-        return em;
-    }
+  /**
+   * Creates and configures the TransactionManager for Reporteador.
+   *
+   * @param entityManagerFactory the EntityManagerFactory for Reporteador
+   * @return the configured PlatformTransactionManager
+   */
+  @Bean(name = "reporteadorTransactionManager")
+  public PlatformTransactionManager reporteadorTransactionManager(
+      @Qualifier("reporteadorEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+    return new JpaTransactionManager(entityManagerFactory);
+  }
 
-    @Bean(name = "reporteadorTransactionManager")
-    public PlatformTransactionManager reporteadorTransactionManager(
-            @Qualifier("reporteadorEntityManagerFactory") LocalContainerEntityManagerFactoryBean reporteadorEntityManagerFactory) {
-        return new JpaTransactionManager(reporteadorEntityManagerFactory.getObject());
-    }
+  /**
+   * Creates the EntityManagerFactoryBuilder bean.
+   *
+   * @return the configured EntityManagerFactoryBuilder
+   */
+  @Bean
+  public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
+    return new EntityManagerFactoryBuilder(
+        new HibernateJpaVendorAdapter(),
+        hibernateProperties(),
+        null
+    );
+  }
+
+  /**
+   * Configures the Hibernate properties.
+   *
+   * @return a map of Hibernate properties
+   */
+  private Map<String, Object> hibernateProperties() {
+    Map<String, Object> properties = new HashMap<>();
+    properties.put("hibernate.dialect", "org.hibernate.dialect.OracleDialect");
+    return properties;
+  }
 }
-

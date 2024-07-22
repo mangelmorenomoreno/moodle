@@ -1,7 +1,7 @@
 package com.ucundinamarca.modules.semillamoodle.dataproviders.jpa;
 
-import com.ucundinamarca.crosscutting.persistence.repository.SemillaMoodleRepository;
-import com.ucundinamarca.modules.semillamoodle.dataproviders.ISemillaMoodleDataProviders;
+import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.repository.SemillaMoodleRepository;
+import com.ucundinamarca.modules.semillamoodle.dataproviders.IsemillaMoodleDataProviders;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-public class SemillaMoodleDataProviders implements ISemillaMoodleDataProviders {
+public class SemillaMoodleDataProviders implements IsemillaMoodleDataProviders {
 
-    @Autowired
-    private SemillaMoodleRepository semillaMoodleRepository;
+  @Autowired
+  private SemillaMoodleRepository jpaSemillaMoodleRepository;
 
 
 }

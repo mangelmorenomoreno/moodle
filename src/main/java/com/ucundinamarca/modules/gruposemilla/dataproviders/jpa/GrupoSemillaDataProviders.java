@@ -1,7 +1,7 @@
 package com.ucundinamarca.modules.gruposemilla.dataproviders.jpa;
 
-import com.ucundinamarca.crosscutting.persistence.repository.GrupoSemillaRepository;
-import com.ucundinamarca.modules.gruposemilla.dataproviders.IGrupoSemillaDataProviders;
+import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.repository.GrupoSemillaRepository;
+import com.ucundinamarca.modules.gruposemilla.dataproviders.IgrupoSemillaDataProviders;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +15,10 @@ import org.springframework.stereotype.Service;
  */
 @Log4j2
 @Service
-public class GrupoSemillaDataProviders implements IGrupoSemillaDataProviders {
+public class GrupoSemillaDataProviders implements IgrupoSemillaDataProviders {
 
-    @Autowired
-    private GrupoSemillaRepository grupoSemillaRepository;
-
-
-
-
+  @Autowired
+  private GrupoSemillaRepository jpaGrupoSemillaRepository;
 
 
 }

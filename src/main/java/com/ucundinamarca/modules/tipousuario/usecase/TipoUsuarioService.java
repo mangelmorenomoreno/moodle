@@ -1,7 +1,7 @@
 package com.ucundinamarca.modules.tipousuario.usecase;
 
-import com.ucundinamarca.modules.reporteador.dataproviders.IReporteadorDataProviders;
-import com.ucundinamarca.modules.tipousuario.dataproviders.ITipoUsuarioDataProviders;
+import com.ucundinamarca.modules.reporteador.dataproviders.IreporteadorDataProviders;
+import com.ucundinamarca.modules.tipousuario.dataproviders.ItipoUsuarioDataProviders;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class TipoUsuarioService {
 
-    @Autowired
-    private ITipoUsuarioDataProviders iTipoUsuarioDataProviders;
+  @Autowired
+  private ItipoUsuarioDataProviders itipoUsuarioDataProviders;
 
-    @Autowired
-    private IReporteadorDataProviders iReporteadorDataProviders;
+  @Autowired
+  private IreporteadorDataProviders ireporteadorDataProviders;
 }

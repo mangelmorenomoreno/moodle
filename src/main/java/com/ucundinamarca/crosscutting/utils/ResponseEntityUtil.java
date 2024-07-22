@@ -6,9 +6,8 @@ import com.ucundinamarca.crosscutting.domain.dto.error.ValidationError;
 import com.ucundinamarca.crosscutting.domain.enums.ResponseStatusCode;
 import com.ucundinamarca.crosscutting.domain.response.ResponseStatus;
 import com.ucundinamarca.crosscutting.domain.response.RestResponse;
-import java.util.Objects;
-
 import com.ucundinamarca.crosscutting.patterns.IrestResponse;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,9 +24,9 @@ import org.springframework.http.ResponseEntity;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResponseEntityUtil {
-  public static <T> ResponseEntity<IrestResponse<T>>
-      createResponseEntity(
-        final IrestResponse<T> response) {
+  public static <T> ResponseEntity<IrestResponse<T>> createResponseEntity(
+      final IrestResponse<T> response
+  ) {
     return ResponseEntity.status(HttpStatus.valueOf(response.getHttpStatusCode())).body(response);
   }
 
@@ -43,8 +42,9 @@ public class ResponseEntityUtil {
    * @param <T>   El tipo de respuesta esperada.
    * @return ResponseEntity de tipo IrestResponse que contiene
    */
-  public static <T> ResponseEntity<IrestResponse<T>>
-      createResponseValidationError(final ValidationError error) {
+  public static <T> ResponseEntity<IrestResponse<T>> createResponseValidationError(
+      final ValidationError error
+  ) {
     final RestResponse<T> fullResponse = new RestResponse<>();
 
     if (!Objects.isNull(error)) {
@@ -78,9 +78,10 @@ public class ResponseEntityUtil {
    *                        esperan en la respuesta.
    * @return ResponseEntity del tipo IrestResponse que
    */
-  public static <T> ResponseEntity<IrestResponse<T>>
-        createSuccessfulResponse(final String message, final T data, final String detail,
-                                 final String translationCode) {
+  public static <T> ResponseEntity<IrestResponse<T>> createSuccessfulResponse(
+      final String message, final T data, final String detail,
+      final String translationCode
+  ) {
     final ResponseStatus status = getSuccessResponseStatus(message);
 
     final RestResponse<T> fullResponse = new RestResponse<>();
@@ -112,9 +113,10 @@ public class ResponseEntityUtil {
    *                        en la respuesta.
    * @return ResponseEntity del tipo IrestResponse que contiene
    */
-  public static <T> ResponseEntity<IrestResponse<T>>
-        createSuccessfulResponse(final String message, final T data, final String detail,
-                                 final String translationCode, final String lang) {
+  public static <T> ResponseEntity<IrestResponse<T>> createSuccessfulResponse(
+      final String message, final T data, final String detail,
+      final String translationCode, final String lang
+  ) {
     final ResponseStatus status = getSuccessResponseStatus(message);
     final RestResponse<T> fullResponse = new RestResponse<>();
     fullResponse.setResponseStatus(status);
@@ -144,10 +146,11 @@ public class ResponseEntityUtil {
    *                        el tipo de respuesta (puede no usarse en este caso específico).
    * @return ResponseEntity del tipo IrestResponse que contiene los
    */
-  public static <T> ResponseEntity<IrestResponse<T>>
-        createSuccessfulResponse(final String message,
-                                 final String detail,
-                                 final String translationCode, final String lang) {
+  public static <T> ResponseEntity<IrestResponse<T>> createSuccessfulResponse(
+      final String message,
+      final String detail,
+      final String translationCode, final String lang
+  ) {
     final ResponseStatus status = getSuccessResponseStatus(message);
 
     final RestResponse<T> fullResponse = new RestResponse<>();
@@ -179,9 +182,10 @@ public class ResponseEntityUtil {
    *                        tipo de respuesta (puede no usarse en este caso específico).
    * @return ResponseEntity del tipo IrestResponse que contiene los detalles
    */
-  public static <T> ResponseEntity<IrestResponse<T>>
-        createSuccessfulResponse(final String message,
-                                 final String detail, final String translationCode) {
+  public static <T> ResponseEntity<IrestResponse<T>> createSuccessfulResponse(
+      final String message,
+      final String detail, final String translationCode
+  ) {
     final ResponseStatus status = getSuccessResponseStatus(message);
 
     final RestResponse<T> fullResponse = new RestResponse<>();
@@ -208,10 +212,11 @@ public class ResponseEntityUtil {
    * @param <T>     The type of the data expected in the response.
    * @return ResponseEntity of type IrestResponse
    */
-  public static <T> ResponseEntity<IrestResponse<T>>
-        createSuccessfulResponse(final String message,
-                                 final T data,
-                                 final String detail) {
+  public static <T> ResponseEntity<IrestResponse<T>> createSuccessfulResponse(
+      final String message,
+      final T data,
+      final String detail
+  ) {
     final ResponseStatus status = getSuccessResponseStatus(message);
     final RestResponse<T> fullResponse = new RestResponse<>();
     fullResponse.setResponseStatus(status);
@@ -231,15 +236,16 @@ public class ResponseEntityUtil {
    * Configura el estado de respuesta como exitoso con un mensaje personalizado
    * y asigna los datos proporcionados. Además, establece el código de estado HTTP como OK (200).
    *
-   * @param <T> El tipo genérico del dato que se va a incluir en la respuesta.
+   * @param <T>     El tipo genérico del dato que se va a incluir en la respuesta.
    * @param message El mensaje personalizado para incluir en la respuesta exitosa.
-   * @param data Los datos de tipo T que se incluirán en la respuesta.
+   * @param data    Los datos de tipo T que se incluirán en la respuesta.
    * @return Un objeto {@link ResponseEntity} que contiene el estado de la respuesta,
    *         el código de estado HTTP y los datos proporcionados.
    */
-  public static <T> ResponseEntity<IrestResponse<T>>
-        createSuccessfulResponse(final String message,
-                                 final T data) {
+  public static <T> ResponseEntity<IrestResponse<T>> createSuccessfulResponse(
+      final String message,
+      final T data
+  ) {
     final ResponseStatus status = getSuccessResponseStatus(message);
 
     final RestResponse<T> fullResponse = new RestResponse<>();
@@ -252,9 +258,9 @@ public class ResponseEntityUtil {
 
   private static ResponseStatus getErrorResponseStatus(final String message) {
     return ResponseStatus.builder()
-             .message(message)
-             .statusCode(ResponseStatusCode.OK)
-             .build();
+        .message(message)
+        .statusCode(ResponseStatusCode.OK)
+        .build();
   }
 
   private static ResponseStatus getSuccessResponseStatus(final String message) {

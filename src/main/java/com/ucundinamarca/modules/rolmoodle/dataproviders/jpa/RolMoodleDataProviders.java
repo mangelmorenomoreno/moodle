@@ -1,6 +1,6 @@
 package com.ucundinamarca.modules.rolmoodle.dataproviders.jpa;
 
-import com.ucundinamarca.modules.rolmoodle.dataproviders.IRolMoodleDataProviders;
+import com.ucundinamarca.modules.rolmoodle.dataproviders.IrolMoodleDataProviders;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Log4j2
-public class RolMoodleDataProviders implements IRolMoodleDataProviders {
+public class RolMoodleDataProviders implements IrolMoodleDataProviders {
 
 
 }

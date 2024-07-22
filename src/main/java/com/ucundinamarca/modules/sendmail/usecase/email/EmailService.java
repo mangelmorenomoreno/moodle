@@ -61,15 +61,15 @@ public class EmailService {
 
   private String crearContenidoCorreoActivacion(UsuarioDto credencial) {
     return "Hola "
-             + credencial.getName() + ",\n\n"
-             + "¡Gracias por registrarte en nuestra plataforma! Estás a solo un paso de activar tu"
-             + " cuenta y comenzar a usar nuestros servicios.\n\n"
-             + "Por favor, activa tu cuenta haciendo clic en el siguiente enlace:  \n"
-             + "http://localhost:4200/reset-password?token=" + credencial.getId()
-             + " Si tienes alguna pregunta, no dudes en contactarnos en " + emailFrom + ".\n\n"
-             + "Si no te registraste en nuestra plataforma, por favor ignora este mensaje.\n\n"
-             + "Gracias,\n"
-             + "El equipo de Carvajal";
+        + credencial.getName() + ",\n\n"
+        + "¡Gracias por registrarte en nuestra plataforma! Estás a solo un paso de activar tu"
+        + " cuenta y comenzar a usar nuestros servicios.\n\n"
+        + "Por favor, activa tu cuenta haciendo clic en el siguiente enlace:  \n"
+        + "http://localhost:4200/reset-password?token=" + credencial.getId()
+        + " Si tienes alguna pregunta, no dudes en contactarnos en " + emailFrom + ".\n\n"
+        + "Si no te registraste en nuestra plataforma, por favor ignora este mensaje.\n\n"
+        + "Gracias,\n"
+        + "El equipo de Carvajal";
   }
 
   /**
@@ -85,16 +85,16 @@ public class EmailService {
    */
   public String crearContenidoCorreoRecuperacionContrasena(UsuarioDto credencial) {
     return "Hola " + credencial.getName() + " "
-             +  ",\n\n"
-             + "Hemos recibido una solicitud para restablecer tu contraseña."
-             + " Si no solicitaste esto, "
-             + "por favor ignora este correo. De lo contrario, puedes restablecer tu contraseña "
-             + "utilizando el siguiente enlace:\n\n"
-             + "http://localhost:4200/reset-password?token="
-             + " Este enlace solo será válido por un período limitado de tiempo.\n\n"
-             + " Si tienes problemas para restablecer tu contraseña o no solicitaste este cambio, "
-             + "por favor contacta a nuestro equipo de soporte "
-             + "Saludos,\n"
-             + "El equipo de Carvajal";
+        + ",\n\n"
+        + "Hemos recibido una solicitud para restablecer tu contraseña."
+        + " Si no solicitaste esto, "
+        + "por favor ignora este correo. De lo contrario, puedes restablecer tu contraseña "
+        + "utilizando el siguiente enlace:\n\n"
+        + "http://localhost:4200/reset-password?token="
+        + " Este enlace solo será válido por un período limitado de tiempo.\n\n"
+        + " Si tienes problemas para restablecer tu contraseña o no solicitaste este cambio, "
+        + "por favor contacta a nuestro equipo de soporte "
+        + "Saludos,\n"
+        + "El equipo de Carvajal";
   }
 }
