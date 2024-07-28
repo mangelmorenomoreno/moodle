@@ -1,5 +1,9 @@
 package com.ucundinamarca.modules.matriculamoodle.dataproviders;
 
+import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesMatriculaMoodleVo;
+import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.MatriculaMoodle;
+import java.util.List;
+
 /**
  * IMatriculaMoodleDataProviders.
  *
@@ -9,4 +13,14 @@ package com.ucundinamarca.modules.matriculamoodle.dataproviders;
  */
 
 public interface ImatriculaMoodleDataProviders {
+
+  List<EstudiantesMatriculaMoodleVo> listarEstudiantesMatriculaMasiva(
+      String progId, String unidId, String peunId, String niedId, String grupId,
+      String pegeId, String documento, String instId, String codMateria, String idMoodle)
+      throws Exception;
+
+  List<MatriculaMoodle> saveAll(List<MatriculaMoodle> matriculaMoodles);
+
+  MatriculaMoodle save(MatriculaMoodle matriculaMoodles);
+
 }

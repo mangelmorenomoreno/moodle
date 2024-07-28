@@ -16,11 +16,10 @@ public class Conexion {
   /**
    * Configura la conexión para crear un estudiante de pregrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para crear un estudiante de pregrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPregradoCrearEstudiante(Integer tipo) throws JSONException {
+  public ConexionVo conexionPregradoCrearEstudiante() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("core_user_create_users");
@@ -32,11 +31,10 @@ public class Conexion {
   /**
    * Configura la conexión para crear un estudiante de posgrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para crear un estudiante de posgrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPosgradoCrearEstudiante(Integer tipo) throws JSONException {
+  public ConexionVo conexionPosgradoCrearEstudiante() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("core_user_create_users");
@@ -48,11 +46,10 @@ public class Conexion {
   /**
    * Configura la conexión para crear grupos de pregrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para crear grupos de pregrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPregradoCrearGrupos(Integer tipo) throws JSONException {
+  public ConexionVo conexionPregradoCrearGrupos() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("core_course_duplicate_course");
@@ -66,11 +63,10 @@ public class Conexion {
   /**
    * Configura la conexión para crear grupos de posgrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para crear grupos de posgrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionProsgradoCrearGrupos(Integer tipo) throws JSONException {
+  public ConexionVo conexionProsgradoCrearGrupos() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("core_course_duplicate_course");
@@ -84,11 +80,10 @@ public class Conexion {
   /**
    * Configura la conexión para matricular estudiantes de pregrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para matricular estudiantes de pregrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPregradoMatriculaMoodle(Integer tipo) throws JSONException {
+  public ConexionVo conexionPregradoMatriculaMoodle() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("enrol_manual_enrol_users");
@@ -117,11 +112,10 @@ public class Conexion {
   /**
    * Configura la conexión para desmatricular estudiantes de pregrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para desmatricular estudiantes de pregrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPregradoDesMatriculaMoodle(Integer tipo) throws JSONException {
+  public ConexionVo conexionPregradoDesMatriculaMoodle() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("enrol_manual_unenrol_users");
@@ -135,11 +129,10 @@ public class Conexion {
   /**
    * Configura la conexión para matricular estudiantes de posgrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para matricular estudiantes de posgrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPosgradoMatriculaMoodle(Integer tipo) throws JSONException {
+  public ConexionVo conexionPosgradoMatriculaMoodle() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("enrol_manual_enrol_users");
@@ -153,11 +146,10 @@ public class Conexion {
   /**
    * Configura la conexión para desmatricular estudiantes de posgrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para desmatricular estudiantes de posgrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPosgradoDesMatriculaMoodle(Integer tipo) throws JSONException {
+  public ConexionVo conexionPosgradoDesMatriculaMoodle() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("enrol_manual_unenrol_users");
@@ -171,11 +163,10 @@ public class Conexion {
   /**
    * Configura la conexión para extraer notas de estudiantes de pregrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para extraer notas de estudiantes de pregrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPregradoExtraccionNotas(Integer tipo) throws JSONException {
+  public ConexionVo conexionPregradoExtraccionNotas() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("cundinamarca_grade_course");
@@ -189,11 +180,10 @@ public class Conexion {
   /**
    * Configura la conexión para extraer notas de estudiantes de posgrado en Moodle.
    *
-   * @param tipo El tipo de conexión.
    * @return Un objeto {@link ConexionVo} configurado para extraer notas de estudiantes de posgrado.
    * @throws JSONException Si ocurre un error al construir el objeto JSON.
    */
-  public ConexionVo conexionPosgradoExtraccionNotas(Integer tipo) throws JSONException {
+  public ConexionVo conexionPosgradoExtraccionNotas() throws JSONException {
     ConexionVo conexionVo = new ConexionVo();
     conexionVo.setMoodlewsrestformat("json");
     conexionVo.setWsfunction("cundinamarca_grade_course");

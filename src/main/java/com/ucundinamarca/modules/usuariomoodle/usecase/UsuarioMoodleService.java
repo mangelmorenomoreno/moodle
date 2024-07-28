@@ -13,8 +13,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,11 +22,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * UsuarioMoodleService.
@@ -49,7 +45,6 @@ public class UsuarioMoodleService {
   @Autowired
   private RestTemplate restTemplate;
 
-  private final Lock lock = new ReentrantLock();
 
   /**
    * Obtiene una lista de estudiantes de pregrado que no están matriculados.
@@ -63,32 +58,18 @@ public class UsuarioMoodleService {
         null, null, null, null);
   }
 
-  /**
-   * Método que se ejecuta cada segundo para la creación de usuarios.
-   */
-  @Scheduled(cron = "*/1 * * * * ?")
-  public void ejecutarCreacionUsuario() {
-    if (lock.tryLock()) {
-      try {
-        log.info("inicia ejecutarCreacionUsuario " + System.currentTimeMillis());
-        procesarEstudiantes();
-        log.info("finaliza ejecutarCreacionUsuario:" + System.currentTimeMillis());
-      } catch (Exception e) {
-        log.error("Error en ejecutarCreacionUsuario", e);
-      } finally {
-        lock.unlock();
-      }
-    } else {
-      log.info("Cron ya está en ejecución, omitiendo ejecución...");
-    }
-  }
 
-  private void procesarEstudiantes() throws UnsupportedEncodingException {
+  /**
+   * Processes students for enrollment in Moodle.
+   *
+   * @throws UnsupportedEncodingException if an unsupported encoding is encountered during.
+   */
+  public void procesarCrearUsuarioEstudiantes() throws UnsupportedEncodingException {
     List<EstudiantesVo> estudiantes = iusuarioMoodleDataProviders.listarEstudianteSin("1",
-        "252565", iusuarioMoodleDataProviders.listPeriodoUniversidad().getPeunId(),
+        "155209", iusuarioMoodleDataProviders.listPeriodoUniversidad().getPeunId(),
         null,
         null, null, null, null, null, null, null);
-    procesarEstudiantes(estudiantes);
+    procesarCrearUsuarioEstudiantes(estudiantes);
   }
 
   /**
@@ -97,7 +78,7 @@ public class UsuarioMoodleService {
    * @param estudiantes Lista de estudiantes a procesar.
    * @throws UnsupportedEncodingException Si ocurre un error de codificación.
    */
-  public void procesarEstudiantes(List<EstudiantesVo> estudiantes)
+  public void procesarCrearUsuarioEstudiantes(List<EstudiantesVo> estudiantes)
       throws UnsupportedEncodingException {
     if (estudiantes != null) {
       log.info("Cantidad de estudiantes " + estudiantes.size());
@@ -106,7 +87,7 @@ public class UsuarioMoodleService {
       for (EstudiantesVo estudiante : estudiantes) {
         UsuariowsVo usuariowsVo = mapEstudianteToUsuarioVo(estudiante);
         RespuestaEstudianteVo respuesta = crearUsuario(
-            conexion.conexionPregradoCrearEstudiante(2), usuariowsVo);
+            conexion.conexionPregradoCrearEstudiante(), usuariowsVo);
         processResponse(estudiante, respuesta, counters, fechacambio);
       }
       logCounters(counters);
@@ -205,7 +186,9 @@ public class UsuarioMoodleService {
     RespuestaEstudianteVo respuestaEstudianteVo = new RespuestaEstudianteVo();
     try {
       String urlParameters = getUrlParameters(usuarioVo);
+      log.info("Url Parametros " + urlParameters);
       String serverUrl = getServerUrl(conexionVo);
+      log.info("Url serverUrl " + serverUrl);
       HttpHeaders headers = new HttpHeaders();
       headers.set("Content-Type", "application/x-www-form-urlencoded");
       HttpEntity<String> entity = new HttpEntity<>(urlParameters, headers);
@@ -219,40 +202,47 @@ public class UsuarioMoodleService {
   }
 
   private String getUrlParameters(UsuariowsVo usuarioVo) throws UnsupportedEncodingException {
-    return String.format(
-        "&users[0][email]=%s&users[0][lastname]=%s&users[0]"
-            + "[firstname]=%s&users[0][password]=%s"
-            + "&users[0][username]=%s&users[0][customfields]"
-            + "[0][type]=programa&users[0][customfields]"
-            + "[0][value]=%s&users[0][customfields][1]"
-            + "[type]=sede&users[0][customfields][1][value]=%s"
-            + "&users[0][customfields][2][type]=identificacion&users[0]"
-            + "[customfields][2][value]=%s"
-            + "&users[0][customfields][3]"
-            + "[type]=codigo_estudiante&users[0][customfields][3][value]=%s"
-            + "&users[0][customfields][4]"
-            + "[type]=facultad&users[0][customfields][4][value]=%s",
-        encodeString(usuarioVo.getEmail()),
-        encodeString(usuarioVo.getLastname()),
-        encodeString(usuarioVo.getFirstname()),
-        encodeString(usuarioVo.getPasword()),
-        encodeString(usuarioVo.getUsername()),
-        encodeString(usuarioVo.getPrograma()),
-        encodeString(usuarioVo.getSede()),
-        encodeString(usuarioVo.getIdentificacion()),
-        encodeString(usuarioVo.getCodigoEstudiante() != null
-            && !usuarioVo.getCodigoEstudiante().equals("0")
-            ? usuarioVo.getCodigoEstudiante() : usuarioVo.getIdentificacion()),
-        usuarioVo.getFacultad() != null
-            ? encodeString(usuarioVo.getFacultad()) : "");
+
+    String urlParameters = "&users[0][email]=" + usuarioVo.getEmail()
+        + "&users[0][lastname]=" + usuarioVo.getLastname()
+        + "&users[0][firstname]=" + usuarioVo.getFirstname()
+        + "&users[0][password]=" + usuarioVo.getPasword()
+        + "&users[0][username]=" + usuarioVo.getUsername()
+        + "&users[0][customfields][0][type]=programa"
+        + "&users[0][customfields][0][value]=" + usuarioVo.getPrograma()
+        + "&users[0][customfields][1][type]=sede"
+        + "&users[0][customfields][1][value]=" + usuarioVo.getSede()
+        + "&users[0][customfields][2][type]=identificacion"
+        + "&users[0][customfields][2][value]=" + usuarioVo.getIdentificacion()
+        + "&users[0][customfields][2][type]=tipo_usuario"
+        + "&users[0][customfields][2][value]=" + usuarioVo.getTipo();
+    if (usuarioVo.getCodigoEstudiante() != null && !usuarioVo.getCodigoEstudiante().equals("0")) {
+      urlParameters = urlParameters
+          + "&users[0][customfields][3][type]=codigo_estudiante"
+          + "&users[0][customfields][3][value]=" + usuarioVo.getCodigoEstudiante();
+
+    } else {
+      urlParameters = urlParameters
+          + "&users[0][customfields][3][type]=codigo_estudiante"
+          + "&users[0][customfields][3][value]=" + usuarioVo.getIdentificacion();
+
+    }
+    if (usuarioVo.getFacultad() != null) {
+      urlParameters = urlParameters
+          + "&users[0][customfields][4][type]=facultad"
+          + "&users[0][customfields][4][value]=" + usuarioVo.getFacultad();
+    }
+
+    return urlParameters;
   }
 
   private String getServerUrl(ConexionVo conexionVo) {
-    return UriComponentsBuilder.fromHttpUrl(conexionVo.getUrl())
-        .queryParam("wstoken", conexionVo.getWstoken())
-        .queryParam("moodlewsrestformat", conexionVo.getMoodlewsrestformat())
-        .queryParam("wsfunction", conexionVo.getWsfunction())
-        .toUriString();
+
+    String serverurl = conexionVo.getUrl()
+        + "?wstoken=" + conexionVo.getWstoken()
+        + "&moodlewsrestformat=" + conexionVo.getMoodlewsrestformat()
+        + "&wsfunction=" + conexionVo.getWsfunction();
+    return serverurl;
   }
 
   private void parseResponse(String response, RespuestaEstudianteVo respuestaEstudianteVo)

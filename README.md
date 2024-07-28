@@ -63,7 +63,6 @@ notas.
 ## Tecnologías Utilizadas
 
 - Backend: Java con Spring Boot
-- Frontend: Angular
 - Base de Datos: ORACLE
 - Mensajería: ActiveMQ
 - Otras: Docker, JMS, JWT para autenticación

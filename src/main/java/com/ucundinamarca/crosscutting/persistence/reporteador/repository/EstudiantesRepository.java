@@ -107,6 +107,9 @@ public class EstudiantesRepository {
     }
     if (peunId != null) {
       sql.append(" AND MAAC.PEUN_ID = '").append(peunId).append("'");
+    } else {
+      sql.append("AND MAAC.PEUN_ID= (SELECT MAX(PEUN_ID) FROM ACADEMICO.PERIODOUNIVERSIDAD WHERE "
+          + "TPPA_ID = 5 AND SYSDATE BETWEEN PEUN_FECHAINICIO AND PEUN_FECHAFIN) ");
     }
     if (pegeDocumentoidentidad != null) {
       sql.append(" AND PEGE.PEGE_DOCUMENTOIDENTIDAD = '")
