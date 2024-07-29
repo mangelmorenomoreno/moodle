@@ -1,5 +1,6 @@
 package com.ucundinamarca.modules.usuariomoodle.dataproviders;
 
+import com.ucundinamarca.crosscutting.domain.dto.moodle.DocentesVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.PeriodoUniversidadVo;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.UsuarioMoodle;
@@ -24,5 +25,9 @@ public interface IusuarioMoodleDataProviders {
   UsuarioMoodle save(UsuarioMoodle usuarioMoodle);
 
   PeriodoUniversidadVo listPeriodoUniversidad();
+
+  List<DocentesVo> registroListarDocente(
+      String pegeId, String documento, String peunId, String usuario, String programa,
+      String unidad, String instancia) throws Exception;
 
 }

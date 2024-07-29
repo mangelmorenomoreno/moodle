@@ -60,7 +60,7 @@ public class CaracteresEspeciales {
   }
 
   /**
-   * Decodifica los caracteres UTF-8 que están codificados incorrectamente.
+   * Decodifica los caracteres UTF-8 que est&aacute;n codificados incorrectamente.
    *
    * @param str La cadena original que contiene caracteres UTF-8 codificados incorrectamente.
    * @return La cadena con caracteres UTF-8 decodificados correctamente.

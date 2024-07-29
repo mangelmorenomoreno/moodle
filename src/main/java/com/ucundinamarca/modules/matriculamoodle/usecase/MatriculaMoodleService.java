@@ -133,7 +133,7 @@ public class MatriculaMoodleService {
             "1", null, null, null, null);
     for (EstudiantesMatriculaMoodleVo estudiante : estudiantesMatriculaMoodleVos) {
       MatriculaMoodlewsVo matriculaMoodlewsVo = crearMatriculaMoodleVo(estudiante);
-      RespuestaMatriculaMoodleVo respuesta = matriculaMoodleRestTemplate.matriculaMoodle(
+      RespuestaMatriculaMoodleVo respuesta = matriculaMoodleRestTemplate.desMatriculaMoodle(
           conexion.conexionPregradoDesMatriculaMoodle(), matriculaMoodlewsVo);
       if (respuesta.isEjecucion()) {
         eliminarMatricula(estudiante);

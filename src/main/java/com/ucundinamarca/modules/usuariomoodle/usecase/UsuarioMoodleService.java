@@ -3,6 +3,7 @@ package com.ucundinamarca.modules.usuariomoodle.usecase;
 import com.ucundinamarca.crosscutting.domain.dto.autentication.ConexionVo;
 import com.ucundinamarca.crosscutting.domain.dto.estudiantes.RespuestaEstudianteVo;
 import com.ucundinamarca.crosscutting.domain.dto.estudiantes.UsuariowsVo;
+import com.ucundinamarca.crosscutting.domain.dto.moodle.DocentesVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesVo;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.UsuarioMoodle;
 import com.ucundinamarca.crosscutting.utils.CaracteresEspeciales;
@@ -86,9 +87,25 @@ public class UsuarioMoodleService {
       Timestamp fechacambio = new Timestamp(System.currentTimeMillis());
       for (EstudiantesVo estudiante : estudiantes) {
         UsuariowsVo usuariowsVo = mapEstudianteToUsuarioVo(estudiante);
-        RespuestaEstudianteVo respuesta = crearUsuario(
+        RespuestaEstudianteVo respuesta = crearUsuarioEstudiante(
             conexion.conexionPregradoCrearEstudiante(), usuariowsVo);
-        processResponse(estudiante, respuesta, counters, fechacambio);
+        processResponseEstudiante(estudiante, respuesta, counters, fechacambio);
+      }
+      logCounters(counters);
+    }
+  }
+
+  private void procesarCrearUsuarioDocentes(List<DocentesVo> docentesVos)
+      throws UnsupportedEncodingException {
+    if (docentesVos != null) {
+      log.info("Cantidad de docentes " + docentesVos.size());
+      int[] counters = {0, 0, 0, 0};
+      Timestamp fechacambio = new Timestamp(System.currentTimeMillis());
+      for (DocentesVo docentes : docentesVos) {
+        UsuariowsVo usuariowsVo = mapDocentesToUsuarioVo(docentes);
+        RespuestaEstudianteVo respuesta = crearUsuarioDocente(
+            conexion.conexionPregradoCrearEstudiante(), usuariowsVo);
+        processResponseDocente(docentes, respuesta, counters, fechacambio);
       }
       logCounters(counters);
     }
@@ -116,7 +133,9 @@ public class UsuarioMoodleService {
     String ultimosDosDigitos = estudiante.getPegeDocumentoidentidad()
         .substring(estudiante.getPegeDocumentoidentidad().length() - 2);
     usuariowsVo.setPasword(encodeString(estudiante.getPengPrimerapellido().toUpperCase()
-        + "20241a" + ultimosDosDigitos));
+        + iusuarioMoodleDataProviders.listPeriodoUniversidad().getPeunAno()
+        + iusuarioMoodleDataProviders.listPeriodoUniversidad().getPeunPeriodo()
+        + "a" + ultimosDosDigitos));
     usuariowsVo.setPrograma(encodeString(
         CaracteresEspeciales.clearString(estudiante.getProgNombre().toUpperCase())));
     usuariowsVo.setSede(encodeString(
@@ -128,16 +147,56 @@ public class UsuarioMoodleService {
     return usuariowsVo;
   }
 
+
+  private UsuariowsVo mapDocentesToUsuarioVo(DocentesVo docentesVo)
+      throws UnsupportedEncodingException {
+    String ultimosDosDigitos = null;
+    UsuariowsVo usuariowsVo = new UsuariowsVo();
+    usuariowsVo.setEmail(URLEncoder.encode(docentesVo.getPengEmailinstitucional().toLowerCase(),
+        "UTF-8"));
+    usuariowsVo.setIdentificacion(URLEncoder.encode(docentesVo.getPegeDocumentoidentidad(),
+        "UTF-8"));
+    ultimosDosDigitos = docentesVo.getPegeDocumentoidentidad().substring(
+        docentesVo.getPegeDocumentoidentidad().length() - 2);
+    usuariowsVo.setPasword(URLEncoder.encode(docentesVo.getPengPrimerapellido().toUpperCase()
+        + iusuarioMoodleDataProviders.listPeriodoUniversidad().getPeunAno()
+        + iusuarioMoodleDataProviders.listPeriodoUniversidad().getPeunPeriodo()
+        + "a" + ultimosDosDigitos, "UTF-8"));
+    usuariowsVo.setUsername(URLEncoder.encode(CaracteresEspeciales.clearString(
+        docentesVo.getUsuaUsuario().toLowerCase()), "UTF-8"));
+    if (docentesVo.getPengSegundonombre() != null) {
+      usuariowsVo.setFirstname(URLEncoder.encode(CaracteresEspeciales.clearString(
+              docentesVo.getPengPrimernombre().toUpperCase()) + " "
+              + CaracteresEspeciales.clearString(docentesVo.getPengSegundonombre().toUpperCase()),
+          "UTF-8"));
+    } else {
+      usuariowsVo.setFirstname(URLEncoder.encode(CaracteresEspeciales.clearString(
+          docentesVo.getPengPrimernombre().toUpperCase()), "UTF-8"));
+    }
+    if (docentesVo.getPengSegundoapellido() != null) {
+      usuariowsVo.setLastname(URLEncoder.encode(CaracteresEspeciales.clearString(
+              docentesVo.getPengPrimerapellido().toUpperCase()) + " "
+              + CaracteresEspeciales.clearString(docentesVo.getPengSegundoapellido().toUpperCase()),
+          "UTF-8"));
+    } else {
+      usuariowsVo.setLastname(URLEncoder.encode(CaracteresEspeciales.clearString(
+          docentesVo.getPengPrimerapellido().toUpperCase()), "UTF-8"));
+
+    }
+    return usuariowsVo;
+  }
+
   private String encodeString(String value) throws UnsupportedEncodingException {
     return URLEncoder.encode(value, "UTF-8");
   }
 
-  private void processResponse(EstudiantesVo estudiante, RespuestaEstudianteVo respuesta,
-                               int[] counters, Timestamp fechacambio) {
+  private void processResponseEstudiante(EstudiantesVo estudiante, RespuestaEstudianteVo respuesta,
+                                         int[] counters, Timestamp fechacambio) {
     if (respuesta.getId() != null) {
       log.info("Ejecutó bien el web service");
       counters[2]++;
-      UsuarioMoodle usuarioMoodle = createUsuarioMoodle(estudiante, respuesta, fechacambio);
+      UsuarioMoodle usuarioMoodle = createUsuarioEstudianteMoodle(
+          estudiante, respuesta, fechacambio);
       if (iusuarioMoodleDataProviders.save(usuarioMoodle) != null) {
         counters[1]++;
         log.info("SUCCESS " + counters[1] + " ID USUARIO " + respuesta.getId());
@@ -152,7 +211,27 @@ public class UsuarioMoodleService {
     }
   }
 
-  private UsuarioMoodle createUsuarioMoodle(
+  private void processResponseDocente(DocentesVo docentesVo, RespuestaEstudianteVo respuesta,
+                                      int[] counters, Timestamp fechacambio) {
+    if (respuesta.getId() != null) {
+      log.info("Ejecutó bien el web service");
+      counters[2]++;
+      UsuarioMoodle usuarioMoodle = createUsuarioDocenteMoodle(docentesVo, respuesta, fechacambio);
+      if (iusuarioMoodleDataProviders.save(usuarioMoodle) != null) {
+        counters[1]++;
+        log.info("SUCCESS " + counters[1] + " ID USUARIO " + respuesta.getId());
+      } else {
+        counters[0]++;
+        log.error("ERROR BD " + counters[0]);
+      }
+    } else {
+      counters[3]++;
+      log.error("Error " + respuesta.getException() + " " + respuesta.getErrorcode() + " "
+          + respuesta.getMessage());
+    }
+  }
+
+  private UsuarioMoodle createUsuarioEstudianteMoodle(
       EstudiantesVo estudiante, RespuestaEstudianteVo respuesta, Timestamp fechacambio) {
     UsuarioMoodle usuarioMoodle = new UsuarioMoodle();
     usuarioMoodle.setPegeId(estudiante.getPegeId());
@@ -161,6 +240,23 @@ public class UsuarioMoodleService {
     usuarioMoodle.setTiusId(1);
     usuarioMoodle.setUnidId(estudiante.getUnidId());
     usuarioMoodle.setInstId(estudiante.getNiedId());
+    usuarioMoodle.setUsmoUsuario(respuesta.getUsername());
+    usuarioMoodle.setUsmoIdMoodle(respuesta.getId());
+    usuarioMoodle.setUsmoFechaCambio(fechacambio);
+    usuarioMoodle.setUsmoRegistradoPor("wsMoodle");
+    return usuarioMoodle;
+  }
+
+  private UsuarioMoodle createUsuarioDocenteMoodle(
+      DocentesVo docentesVo, RespuestaEstudianteVo respuesta, Timestamp fechacambio) {
+    UsuarioMoodle usuarioMoodle = new UsuarioMoodle();
+    usuarioMoodle.setPegeId(Integer.valueOf(docentesVo.getPegeId()));
+    usuarioMoodle.setEstpId(null);
+    usuarioMoodle.setProgId(null);
+    usuarioMoodle.setAreaId(null);
+    usuarioMoodle.setTiusId(2);
+    usuarioMoodle.setUnidId(null);
+    usuarioMoodle.setInstId(1);
     usuarioMoodle.setUsmoUsuario(respuesta.getUsername());
     usuarioMoodle.setUsmoIdMoodle(respuesta.getId());
     usuarioMoodle.setUsmoFechaCambio(fechacambio);
@@ -182,10 +278,11 @@ public class UsuarioMoodleService {
    * @param usuarioVo  Objeto que contiene la información del usuario a crear.
    * @return Un objeto {@link RespuestaEstudianteVo} con la respuesta del servicio web.
    */
-  public RespuestaEstudianteVo crearUsuario(ConexionVo conexionVo, UsuariowsVo usuarioVo) {
+  private RespuestaEstudianteVo crearUsuarioEstudiante(
+      ConexionVo conexionVo, UsuariowsVo usuarioVo) {
     RespuestaEstudianteVo respuestaEstudianteVo = new RespuestaEstudianteVo();
     try {
-      String urlParameters = getUrlParameters(usuarioVo);
+      String urlParameters = getUrlParametersEstudiante(usuarioVo);
       log.info("Url Parametros " + urlParameters);
       String serverUrl = getServerUrl(conexionVo);
       log.info("Url serverUrl " + serverUrl);
@@ -201,7 +298,28 @@ public class UsuarioMoodleService {
     return respuestaEstudianteVo;
   }
 
-  private String getUrlParameters(UsuariowsVo usuarioVo) throws UnsupportedEncodingException {
+  private RespuestaEstudianteVo crearUsuarioDocente(ConexionVo conexionVo, UsuariowsVo usuarioVo) {
+    RespuestaEstudianteVo respuestaEstudianteVo = new RespuestaEstudianteVo();
+    try {
+      String urlParameters = getUrlParametersDocente(usuarioVo);
+      log.info("Url Parametros " + urlParameters);
+      String serverUrl = getServerUrl(conexionVo);
+      log.info("Url serverUrl " + serverUrl);
+      HttpHeaders headers = new HttpHeaders();
+      headers.set("Content-Type", "application/x-www-form-urlencoded");
+      HttpEntity<String> entity = new HttpEntity<>(urlParameters, headers);
+      ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, entity,
+          String.class);
+      parseResponse(response.getBody(), respuestaEstudianteVo);
+    } catch (RestClientException | JSONException | UnsupportedEncodingException ex) {
+      log.error(UsuarioMoodleService.class.getName(), ex);
+    }
+    return respuestaEstudianteVo;
+  }
+
+
+  private String getUrlParametersEstudiante(UsuariowsVo usuarioVo)
+      throws UnsupportedEncodingException {
 
     String urlParameters = "&users[0][email]=" + usuarioVo.getEmail()
         + "&users[0][lastname]=" + usuarioVo.getLastname()
@@ -232,6 +350,20 @@ public class UsuarioMoodleService {
           + "&users[0][customfields][4][type]=facultad"
           + "&users[0][customfields][4][value]=" + usuarioVo.getFacultad();
     }
+
+    return urlParameters;
+  }
+
+  private String getUrlParametersDocente(UsuariowsVo usuarioVo)
+      throws UnsupportedEncodingException {
+
+    String urlParameters = "&users[0][email]=" + usuarioVo.getEmail()
+        + "&users[0][lastname]=" + usuarioVo.getLastname()
+        + "&users[0][firstname]=" + usuarioVo.getFirstname()
+        + "&users[0][password]=" + usuarioVo.getPasword()
+        + "&users[0][username]=" + usuarioVo.getUsername()
+        + "&users[0][customfields][0][type]=identificacion"
+        + "&users[0][customfields][0][value]=" + usuarioVo.getIdentificacion();
 
     return urlParameters;
   }
@@ -268,5 +400,26 @@ public class UsuarioMoodleService {
         respuestaEstudianteVo.setMessage(jsonDates.getString("message"));
       }
     }
+  }
+
+  /**
+   * Processes the creation of teachers in Moodle.
+   *
+   * <p>
+   * This method retrieves a list of teachers based on the provided criteria
+   * using the `registroListarDocente` method from `iusuarioMoodleDataProviders`.
+   * It then calls the `procesarCrearUsuarioDocentes` method to process the
+   * creation of the users in Moodle.
+   * </p>
+   *
+   * @throws Exception if an error occurs during the execution of the method.
+   */
+  public void procesarCrearDocenteMoodle() throws Exception {
+
+    List<DocentesVo> docentesVos = iusuarioMoodleDataProviders.registroListarDocente(null,
+        null, iusuarioMoodleDataProviders.listPeriodoUniversidad().getPeunId(),
+        null,
+        null, null, null);
+    procesarCrearUsuarioDocentes(docentesVos);
   }
 }

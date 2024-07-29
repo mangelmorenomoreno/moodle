@@ -4,7 +4,7 @@ import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesMatriculaMood
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.MatriculaMoodle;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.repository.MatriculaMoodleRepository;
 import com.ucundinamarca.crosscutting.persistence.reporteador.repository.DesMatriculaMoodleRepository;
-import com.ucundinamarca.crosscutting.persistence.reporteador.repository.MatriculaMoodleReporteadorRepository;
+import com.ucundinamarca.crosscutting.persistence.reporteador.repository.MatriculaEstudianteMoodleReporteador;
 import com.ucundinamarca.modules.matriculamoodle.dataproviders.ImatriculaMoodleDataProviders;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -26,7 +26,7 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
   private MatriculaMoodleRepository jpaMatriculaMoodleRepository;
 
   @Autowired
-  private MatriculaMoodleReporteadorRepository matriculaMoodleReporteadorRepository;
+  private MatriculaEstudianteMoodleReporteador matriculaMoodleReporteadorRepository;
 
   @Autowired
   private DesMatriculaMoodleRepository desmatriculaMoodleRepository;

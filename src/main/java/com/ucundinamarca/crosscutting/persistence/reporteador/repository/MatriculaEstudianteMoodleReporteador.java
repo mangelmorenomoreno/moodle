@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Log4j2
-public class MatriculaMoodleReporteadorRepository {
+public class MatriculaEstudianteMoodleReporteador {
 
   @Autowired
   @Qualifier("reporteadorJdbcTemplate")

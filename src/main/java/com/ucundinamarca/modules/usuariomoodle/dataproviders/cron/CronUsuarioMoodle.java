@@ -26,14 +26,34 @@ public class CronUsuarioMoodle {
   private UsuarioMoodleService usuarioMoodleService;
 
   /**
-   * Método que se ejecuta cada segundo para la creación de usuarios.
+   * Método que se ejecuta cada segundo para la creación de estudiantes.
    */
   @Scheduled(cron = "*/1 * * * * ?")
-  public void ejecutarCreacionUsuario() {
+  public void ejecutarCreacionEstudiantes() {
     if (lock.tryLock()) {
       try {
         log.info("inicia ejecutarCreacionUsuario " + System.currentTimeMillis());
         usuarioMoodleService.procesarCrearUsuarioEstudiantes();
+        log.info("finaliza ejecutarCreacionUsuario:" + System.currentTimeMillis());
+      } catch (Exception e) {
+        log.error("Error en ejecutarCreacionUsuario", e);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      log.info("Cron ya está en ejecución, omitiendo ejecución...");
+    }
+  }
+
+  /**
+   * Método que se ejecuta cada segundo para la creación de docentes.
+   */
+  @Scheduled(cron = "*/1 * * * * ?")
+  public void ejecutarCreacionDocentes() {
+    if (lock.tryLock()) {
+      try {
+        log.info("inicia ejecutarCreacionUsuario " + System.currentTimeMillis());
+        usuarioMoodleService.procesarCrearDocenteMoodle();
         log.info("finaliza ejecutarCreacionUsuario:" + System.currentTimeMillis());
       } catch (Exception e) {
         log.error("Error en ejecutarCreacionUsuario", e);
