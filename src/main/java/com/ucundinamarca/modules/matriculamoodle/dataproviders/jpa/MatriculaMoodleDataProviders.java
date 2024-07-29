@@ -3,6 +3,7 @@ package com.ucundinamarca.modules.matriculamoodle.dataproviders.jpa;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesMatriculaMoodleVo;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.MatriculaMoodle;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.repository.MatriculaMoodleRepository;
+import com.ucundinamarca.crosscutting.persistence.reporteador.repository.DesMatriculaMoodleRepository;
 import com.ucundinamarca.crosscutting.persistence.reporteador.repository.MatriculaMoodleReporteadorRepository;
 import com.ucundinamarca.modules.matriculamoodle.dataproviders.ImatriculaMoodleDataProviders;
 import java.util.List;
@@ -27,6 +28,9 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
   @Autowired
   private MatriculaMoodleReporteadorRepository matriculaMoodleReporteadorRepository;
 
+  @Autowired
+  private DesMatriculaMoodleRepository desmatriculaMoodleRepository;
+
 
   @Override
   public List<EstudiantesMatriculaMoodleVo> listarEstudiantesMatriculaMasiva(
@@ -46,5 +50,17 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
     return jpaMatriculaMoodleRepository.save(matriculaMoodles);
   }
 
+  @Override
+  public List<EstudiantesMatriculaMoodleVo> listarDesmatricula(
+      String instId, String pegeId, String grupId, String peunId, String documento
+  ) throws Exception {
+    return desmatriculaMoodleRepository.listarDesmatricula(
+        instId, pegeId, grupId, peunId, documento);
+  }
+
+  @Override
+  public void delete(MatriculaMoodle matriculaMoodles) throws Exception {
+    jpaMatriculaMoodleRepository.delete(matriculaMoodles);
+  }
 
 }

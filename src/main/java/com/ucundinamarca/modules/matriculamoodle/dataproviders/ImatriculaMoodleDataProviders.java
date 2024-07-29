@@ -23,4 +23,10 @@ public interface ImatriculaMoodleDataProviders {
 
   MatriculaMoodle save(MatriculaMoodle matriculaMoodles);
 
+  List<EstudiantesMatriculaMoodleVo> listarDesmatricula(
+      String instId, String pegeId, String grupId, String peunId, String documento
+  ) throws Exception;
+
+  void delete(MatriculaMoodle matriculaMoodles) throws Exception;
+
 }

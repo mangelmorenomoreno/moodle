@@ -95,6 +95,16 @@ public class MatriculaMoodleService {
     logResultadoAlmacenamiento(guardar);
   }
 
+  private void eliminarMatricula(EstudiantesMatriculaMoodleVo estudiante) throws Exception {
+    MatriculaMoodle matriculaMoodle = new MatriculaMoodle();
+    matriculaMoodle.setMamoId(Long.valueOf(estudiante.getMamoId()));
+    matriculaMoodle.setGrseId(Long.valueOf(estudiante.getGrseId()));
+    matriculaMoodle.setUsmoId(Long.valueOf(estudiante.getUsmoId()));
+    matriculaMoodle.setRomoId(Long.valueOf(estudiante.getRomoId()));
+    imatriculaMoodleDataProviders.delete(matriculaMoodle);
+  }
+
+
   private void logResultadoAlmacenamiento(MatriculaMoodle guardar) {
     if (guardar != null) {
       log.info("Almacenamiento en base de datos con éxito");
@@ -103,5 +113,34 @@ public class MatriculaMoodleService {
     }
   }
 
+  /**
+   * Unenrolls students from Moodle.
+   *
+   * <p>
+   * This method retrieves a list of students to be unenrolled from Moodle and processes each one.
+   * For each student, it creates a `MatriculaMoodlewsVo`
+   * object and sends an unenrollment request to Moodle
+   * via the `matriculaMoodleRestTemplate`. If the unenrollment is successful,
+   * it removes the student's
+   * enrollment record from the local database.
+   * </p>
+   *
+   * @throws Exception if there is an error during the unenrollment process
+   */
+  public void desmatriculaMoodle() throws Exception {
+    List<EstudiantesMatriculaMoodleVo> estudiantesMatriculaMoodleVos =
+        imatriculaMoodleDataProviders.listarDesmatricula(
+            "1", null, null, null, null);
+    for (EstudiantesMatriculaMoodleVo estudiante : estudiantesMatriculaMoodleVos) {
+      MatriculaMoodlewsVo matriculaMoodlewsVo = crearMatriculaMoodleVo(estudiante);
+      RespuestaMatriculaMoodleVo respuesta = matriculaMoodleRestTemplate.matriculaMoodle(
+          conexion.conexionPregradoDesMatriculaMoodle(), matriculaMoodlewsVo);
+      if (respuesta.isEjecucion()) {
+        eliminarMatricula(estudiante);
+      }
+    }
+
+
+  }
 
 }
