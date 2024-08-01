@@ -1,5 +1,6 @@
 package com.ucundinamarca.modules.matriculamoodle.dataproviders;
 
+import com.ucundinamarca.crosscutting.domain.dto.moodle.DocentesMatriculaVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesMatriculaMoodleVo;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.MatriculaMoodle;
 import java.util.List;
@@ -23,10 +24,14 @@ public interface ImatriculaMoodleDataProviders {
 
   MatriculaMoodle save(MatriculaMoodle matriculaMoodles);
 
-  List<EstudiantesMatriculaMoodleVo> listarDesmatricula(
+  List<EstudiantesMatriculaMoodleVo> listarDesmatriculaEstudiantes(
       String instId, String pegeId, String grupId, String peunId, String documento
   ) throws Exception;
 
   void delete(MatriculaMoodle matriculaMoodles) throws Exception;
+
+  List<DocentesMatriculaVo> docenteMatricula(String grupId, String pegeId, String documento,
+                                             String peunId, String usuario, String programa,
+                                             String unidad, String instancia) throws Exception;
 
 }

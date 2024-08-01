@@ -8,7 +8,5 @@ package com.ucundinamarca.modules.gruposemilla.dataproviders;
  * @version 1.0
  * @since 13-07-2024
  */
-
-
 public interface IgrupoSemillaDataProviders {
 }

@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  * @since 13-07-2024
  */
-
-
 @Log4j2
 @CrossOrigin("*")
 @RestController

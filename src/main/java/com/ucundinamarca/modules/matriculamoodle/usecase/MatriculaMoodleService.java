@@ -1,5 +1,6 @@
 package com.ucundinamarca.modules.matriculamoodle.usecase;
 
+import com.ucundinamarca.crosscutting.domain.dto.moodle.DocentesMatriculaVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesMatriculaMoodleVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.MatriculaMoodlewsVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.RespuestaMatriculaMoodleVo;
@@ -50,6 +51,14 @@ public class MatriculaMoodleService {
         niedId, grupId, pegeId, documento, instId, codMateria, idMoodle);
   }
 
+  private List<DocentesMatriculaVo> docentesMatriculaVos(
+      String grupId, String pegeId, String documento, String peunId,
+      String usuario, String programa, String unidad, String instancia) throws Exception {
+    return imatriculaMoodleDataProviders.docenteMatricula(grupId, pegeId, documento, peunId,
+        usuario, programa, unidad, instancia);
+  }
+
+
   /**
    * Matricula a los estudiantes en Moodle.
    *
@@ -71,6 +80,48 @@ public class MatriculaMoodleService {
     }
   }
 
+  /**
+   * Realiza la matriculación de docentes en Moodle.
+   *
+   * <p>Este método obtiene una lista de docentes a matricular, crea los objetos de matriculación
+   * necesarios y realiza la llamada al servicio web de Moodle para completar la matriculación.
+   * Si la matriculación es exitosa, guarda la información de la matriculación en la base de datos.
+   * </p>
+   *
+   * <p>El método sigue los siguientes pasos:
+   * <ul>
+   *   <li>Obtiene la lista de docentes a matricular llamando a <code>docentesMatriculaVos</code>.
+   *   </li>
+   *   <li>Obtiene la marca de tiempo actual.</li>
+   *   <li>Itera sobre cada docente, creando el objeto de matriculación <code>MatriculaMoodlewsVo
+   *   </code>.</li>
+   *   <li>Llama al servicio web de Moodle utilizando <code>matriculaMoodleRestTemplate</code>
+   *       y recibe una respuesta.</li>
+   *   <li>Si la matriculación es exitosa, guarda la información de la matriculación llamando a
+   *       <code>guardarMatricula</code>.</li>
+   * </ul>
+   * </p>
+   *
+   * @throws Exception si ocurre algún error durante el proceso de matriculación.
+   * @see #docentesMatriculaVos(String, String, String, String, String, String, String, String)
+   * @see #crearMatriculaMoodleVo(DocentesMatriculaVo)
+   * @see #guardarMatricula(DocentesMatriculaVo, Timestamp)
+   */
+  public void matricularDocentesMoodle() throws Exception {
+    List<DocentesMatriculaVo> docentesMatriculaVos = docentesMatriculaVos(
+        null, null, null, null,
+        null, null, null, null);
+    Timestamp fechaCambio = new Timestamp(System.currentTimeMillis());
+    for (DocentesMatriculaVo docentesMatriculaVo : docentesMatriculaVos) {
+      MatriculaMoodlewsVo matriculaMoodlewsVo = crearMatriculaMoodleVo(docentesMatriculaVo);
+      RespuestaMatriculaMoodleVo respuesta = matriculaMoodleRestTemplate.matriculaMoodle(
+          conexion.conexionPregradoMatriculaMoodle(), matriculaMoodlewsVo);
+      if (respuesta.isEjecucion()) {
+        guardarMatricula(docentesMatriculaVo, fechaCambio);
+      }
+    }
+  }
+
   private MatriculaMoodlewsVo crearMatriculaMoodleVo(EstudiantesMatriculaMoodleVo estudiante)
       throws Exception {
     MatriculaMoodlewsVo matriculaMoodlewsVo = new MatriculaMoodlewsVo();
@@ -83,6 +134,19 @@ public class MatriculaMoodleService {
     return matriculaMoodlewsVo;
   }
 
+  private MatriculaMoodlewsVo crearMatriculaMoodleVo(DocentesMatriculaVo datos)
+      throws Exception {
+    MatriculaMoodlewsVo matriculaMoodlewsVo = new MatriculaMoodlewsVo();
+    matriculaMoodlewsVo.setCourseid(URLEncoder.encode(datos.getGrseIdmoodle(),
+        StandardCharsets.UTF_8.toString()));
+    matriculaMoodlewsVo.setRoleid(URLEncoder.encode(datos.getRomoId(),
+        StandardCharsets.UTF_8.toString()));
+    matriculaMoodlewsVo.setUserid(URLEncoder.encode(datos.getUsmoId(),
+        StandardCharsets.UTF_8.toString()));
+    return matriculaMoodlewsVo;
+  }
+
+
   private void guardarMatricula(EstudiantesMatriculaMoodleVo estudiante, Timestamp fechaCambio) {
     MatriculaMoodle matriculaMoodle = new MatriculaMoodle();
     matriculaMoodle.setGrseId(Long.valueOf(estudiante.getGrseId()));
@@ -91,6 +155,17 @@ public class MatriculaMoodleService {
     matriculaMoodle.setMamoFechaCambio(fechaCambio);
     matriculaMoodle.setMamoRegistradoPor("ws");
 
+    MatriculaMoodle guardar = imatriculaMoodleDataProviders.save(matriculaMoodle);
+    logResultadoAlmacenamiento(guardar);
+  }
+
+  private void guardarMatricula(DocentesMatriculaVo datos, Timestamp fechaCambio) {
+    MatriculaMoodle matriculaMoodle = new MatriculaMoodle();
+    matriculaMoodle.setGrseId(Long.valueOf(datos.getGrseId()));
+    matriculaMoodle.setUsmoId(Long.valueOf(datos.getUsmoId()));
+    matriculaMoodle.setRomoId(Long.valueOf(datos.getRomoId()));
+    matriculaMoodle.setMamoFechaCambio(fechaCambio);
+    matriculaMoodle.setMamoRegistradoPor("ws");
     MatriculaMoodle guardar = imatriculaMoodleDataProviders.save(matriculaMoodle);
     logResultadoAlmacenamiento(guardar);
   }
@@ -127,9 +202,9 @@ public class MatriculaMoodleService {
    *
    * @throws Exception if there is an error during the unenrollment process
    */
-  public void desmatriculaMoodle() throws Exception {
+  public void desmatriculaEstudianteMoodle() throws Exception {
     List<EstudiantesMatriculaMoodleVo> estudiantesMatriculaMoodleVos =
-        imatriculaMoodleDataProviders.listarDesmatricula(
+        imatriculaMoodleDataProviders.listarDesmatriculaEstudiantes(
             "1", null, null, null, null);
     for (EstudiantesMatriculaMoodleVo estudiante : estudiantesMatriculaMoodleVos) {
       MatriculaMoodlewsVo matriculaMoodlewsVo = crearMatriculaMoodleVo(estudiante);
@@ -139,8 +214,6 @@ public class MatriculaMoodleService {
         eliminarMatricula(estudiante);
       }
     }
-
-
   }
 
 }

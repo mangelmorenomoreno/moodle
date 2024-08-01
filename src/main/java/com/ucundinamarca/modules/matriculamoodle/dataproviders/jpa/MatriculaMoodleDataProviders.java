@@ -1,9 +1,11 @@
 package com.ucundinamarca.modules.matriculamoodle.dataproviders.jpa;
 
+import com.ucundinamarca.crosscutting.domain.dto.moodle.DocentesMatriculaVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesMatriculaMoodleVo;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.MatriculaMoodle;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.repository.MatriculaMoodleRepository;
 import com.ucundinamarca.crosscutting.persistence.reporteador.repository.DesMatriculaMoodleRepository;
+import com.ucundinamarca.crosscutting.persistence.reporteador.repository.MatriculaDocentesReporteador;
 import com.ucundinamarca.crosscutting.persistence.reporteador.repository.MatriculaEstudianteMoodleReporteador;
 import com.ucundinamarca.modules.matriculamoodle.dataproviders.ImatriculaMoodleDataProviders;
 import java.util.List;
@@ -31,6 +33,9 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
   @Autowired
   private DesMatriculaMoodleRepository desmatriculaMoodleRepository;
 
+  @Autowired
+  private MatriculaDocentesReporteador matriculaDocentesReporteador;
+
 
   @Override
   public List<EstudiantesMatriculaMoodleVo> listarEstudiantesMatriculaMasiva(
@@ -39,6 +44,7 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
     return matriculaMoodleReporteadorRepository.listarEstudiantesMatriculaMasiva(progId, unidId,
         peunId, niedId, instId, pegeId, documento, instId, codMateria, idMoodle);
   }
+
 
   @Override
   public List<MatriculaMoodle> saveAll(List<MatriculaMoodle> matriculaMoodles) {
@@ -51,7 +57,7 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
   }
 
   @Override
-  public List<EstudiantesMatriculaMoodleVo> listarDesmatricula(
+  public List<EstudiantesMatriculaMoodleVo> listarDesmatriculaEstudiantes(
       String instId, String pegeId, String grupId, String peunId, String documento
   ) throws Exception {
     return desmatriculaMoodleRepository.listarDesmatricula(
@@ -61,6 +67,16 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
   @Override
   public void delete(MatriculaMoodle matriculaMoodles) throws Exception {
     jpaMatriculaMoodleRepository.delete(matriculaMoodles);
+  }
+
+  @Override
+  public List<DocentesMatriculaVo> docenteMatricula(
+      String grupId, String pegeId, String documento,
+      String peunId, String usuario, String programa,
+      String unidad, String instancia)
+      throws Exception {
+    return matriculaDocentesReporteador.listarMatriculaDocenteMasiva(grupId, pegeId, documento,
+        peunId, usuario, programa, unidad, instancia);
   }
 
 }
