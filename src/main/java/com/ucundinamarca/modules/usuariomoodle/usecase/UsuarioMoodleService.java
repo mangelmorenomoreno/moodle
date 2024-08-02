@@ -1,6 +1,5 @@
 package com.ucundinamarca.modules.usuariomoodle.usecase;
 
-import com.ucundinamarca.crosscutting.domain.dto.autentication.ConexionVo;
 import com.ucundinamarca.crosscutting.domain.dto.estudiantes.RespuestaEstudianteVo;
 import com.ucundinamarca.crosscutting.domain.dto.estudiantes.UsuariowsVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.DocentesVo;
@@ -10,22 +9,14 @@ import com.ucundinamarca.crosscutting.utils.CaracteresEspeciales;
 import com.ucundinamarca.crosscutting.utils.Conexion;
 import com.ucundinamarca.modules.reporteador.dataproviders.IreporteadorDataProviders;
 import com.ucundinamarca.modules.usuariomoodle.dataproviders.IusuarioMoodleDataProviders;
+import com.ucundinamarca.modules.usuariomoodle.resttemplate.UsuarioMoodleRestTemplate;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * UsuarioMoodleService.
@@ -44,7 +35,7 @@ public class UsuarioMoodleService {
   private Conexion conexion;
 
   @Autowired
-  private RestTemplate restTemplate;
+  private UsuarioMoodleRestTemplate usuarioMoodleRestTemplate;
 
 
   /**
@@ -87,7 +78,7 @@ public class UsuarioMoodleService {
       Timestamp fechacambio = new Timestamp(System.currentTimeMillis());
       for (EstudiantesVo estudiante : estudiantes) {
         UsuariowsVo usuariowsVo = mapEstudianteToUsuarioVo(estudiante);
-        RespuestaEstudianteVo respuesta = crearUsuarioEstudiante(
+        RespuestaEstudianteVo respuesta = usuarioMoodleRestTemplate.crearEstudiante(
             conexion.conexionPregradoCrearEstudiante(), usuariowsVo);
         processResponseEstudiante(estudiante, respuesta, counters, fechacambio);
       }
@@ -103,7 +94,7 @@ public class UsuarioMoodleService {
       Timestamp fechacambio = new Timestamp(System.currentTimeMillis());
       for (DocentesVo docentes : docentesVos) {
         UsuariowsVo usuariowsVo = mapDocentesToUsuarioVo(docentes);
-        RespuestaEstudianteVo respuesta = crearUsuarioDocente(
+        RespuestaEstudianteVo respuesta = usuarioMoodleRestTemplate.crearDocente(
             conexion.conexionPregradoCrearEstudiante(), usuariowsVo);
         processResponseDocente(docentes, respuesta, counters, fechacambio);
       }
@@ -271,136 +262,6 @@ public class UsuarioMoodleService {
         + ", cantidad de errores de Moodle: " + counters[3]);
   }
 
-  /**
-   * Crea un usuario en Moodle.
-   *
-   * @param conexionVo Objeto de conexión configurado para el servicio web.
-   * @param usuarioVo  Objeto que contiene la información del usuario a crear.
-   * @return Un objeto {@link RespuestaEstudianteVo} con la respuesta del servicio web.
-   */
-  private RespuestaEstudianteVo crearUsuarioEstudiante(
-      ConexionVo conexionVo, UsuariowsVo usuarioVo) {
-    RespuestaEstudianteVo respuestaEstudianteVo = new RespuestaEstudianteVo();
-    try {
-      String urlParameters = getUrlParametersEstudiante(usuarioVo);
-      log.info("Url Parametros " + urlParameters);
-      String serverUrl = getServerUrl(conexionVo);
-      log.info("Url serverUrl " + serverUrl);
-      HttpHeaders headers = new HttpHeaders();
-      headers.set("Content-Type", "application/x-www-form-urlencoded");
-      HttpEntity<String> entity = new HttpEntity<>(urlParameters, headers);
-      ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, entity,
-          String.class);
-      parseResponse(response.getBody(), respuestaEstudianteVo);
-    } catch (RestClientException | JSONException | UnsupportedEncodingException ex) {
-      log.error(UsuarioMoodleService.class.getName(), ex);
-    }
-    return respuestaEstudianteVo;
-  }
-
-  private RespuestaEstudianteVo crearUsuarioDocente(ConexionVo conexionVo, UsuariowsVo usuarioVo) {
-    RespuestaEstudianteVo respuestaEstudianteVo = new RespuestaEstudianteVo();
-    try {
-      String urlParameters = getUrlParametersDocente(usuarioVo);
-      log.info("Url Parametros " + urlParameters);
-      String serverUrl = getServerUrl(conexionVo);
-      log.info("Url serverUrl " + serverUrl);
-      HttpHeaders headers = new HttpHeaders();
-      headers.set("Content-Type", "application/x-www-form-urlencoded");
-      HttpEntity<String> entity = new HttpEntity<>(urlParameters, headers);
-      ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, entity,
-          String.class);
-      parseResponse(response.getBody(), respuestaEstudianteVo);
-    } catch (RestClientException | JSONException | UnsupportedEncodingException ex) {
-      log.error(UsuarioMoodleService.class.getName(), ex);
-    }
-    return respuestaEstudianteVo;
-  }
-
-
-  private String getUrlParametersEstudiante(UsuariowsVo usuarioVo)
-      throws UnsupportedEncodingException {
-
-    String urlParameters = "&users[0][email]=" + usuarioVo.getEmail()
-        + "&users[0][lastname]=" + usuarioVo.getLastname()
-        + "&users[0][firstname]=" + usuarioVo.getFirstname()
-        + "&users[0][password]=" + usuarioVo.getPasword()
-        + "&users[0][username]=" + usuarioVo.getUsername()
-        + "&users[0][customfields][0][type]=programa"
-        + "&users[0][customfields][0][value]=" + usuarioVo.getPrograma()
-        + "&users[0][customfields][1][type]=sede"
-        + "&users[0][customfields][1][value]=" + usuarioVo.getSede()
-        + "&users[0][customfields][2][type]=identificacion"
-        + "&users[0][customfields][2][value]=" + usuarioVo.getIdentificacion()
-        + "&users[0][customfields][2][type]=tipo_usuario"
-        + "&users[0][customfields][2][value]=" + usuarioVo.getTipo();
-    if (usuarioVo.getCodigoEstudiante() != null && !usuarioVo.getCodigoEstudiante().equals("0")) {
-      urlParameters = urlParameters
-          + "&users[0][customfields][3][type]=codigo_estudiante"
-          + "&users[0][customfields][3][value]=" + usuarioVo.getCodigoEstudiante();
-
-    } else {
-      urlParameters = urlParameters
-          + "&users[0][customfields][3][type]=codigo_estudiante"
-          + "&users[0][customfields][3][value]=" + usuarioVo.getIdentificacion();
-
-    }
-    if (usuarioVo.getFacultad() != null) {
-      urlParameters = urlParameters
-          + "&users[0][customfields][4][type]=facultad"
-          + "&users[0][customfields][4][value]=" + usuarioVo.getFacultad();
-    }
-
-    return urlParameters;
-  }
-
-  private String getUrlParametersDocente(UsuariowsVo usuarioVo)
-      throws UnsupportedEncodingException {
-
-    String urlParameters = "&users[0][email]=" + usuarioVo.getEmail()
-        + "&users[0][lastname]=" + usuarioVo.getLastname()
-        + "&users[0][firstname]=" + usuarioVo.getFirstname()
-        + "&users[0][password]=" + usuarioVo.getPasword()
-        + "&users[0][username]=" + usuarioVo.getUsername()
-        + "&users[0][customfields][0][type]=identificacion"
-        + "&users[0][customfields][0][value]=" + usuarioVo.getIdentificacion();
-
-    return urlParameters;
-  }
-
-  private String getServerUrl(ConexionVo conexionVo) {
-
-    String serverurl = conexionVo.getUrl()
-        + "?wstoken=" + conexionVo.getWstoken()
-        + "&moodlewsrestformat=" + conexionVo.getMoodlewsrestformat()
-        + "&wsfunction=" + conexionVo.getWsfunction();
-    return serverurl;
-  }
-
-  private void parseResponse(String response, RespuestaEstudianteVo respuestaEstudianteVo)
-      throws JSONException {
-    JSONObject jsonDates;
-    if (response != null && !response.isEmpty()) {
-      if (response.charAt(0) == '[') {
-        JSONArray jsonResult = new JSONArray(response);
-        for (int i = 0; i < jsonResult.length(); i++) {
-          jsonDates = jsonResult.getJSONObject(i);
-          respuestaEstudianteVo.setUsername(jsonDates.getString("username"));
-          respuestaEstudianteVo.setId(jsonDates.getString("id"));
-          respuestaEstudianteVo.setException(null);
-          respuestaEstudianteVo.setErrorcode(null);
-          respuestaEstudianteVo.setMessage(null);
-        }
-      } else if (response.charAt(0) == '{') {
-        jsonDates = new JSONObject(response);
-        respuestaEstudianteVo.setUsername(null);
-        respuestaEstudianteVo.setId(null);
-        respuestaEstudianteVo.setException(jsonDates.getString("exception"));
-        respuestaEstudianteVo.setErrorcode(jsonDates.getString("errorcode"));
-        respuestaEstudianteVo.setMessage(jsonDates.getString("message"));
-      }
-    }
-  }
 
   /**
    * Processes the creation of teachers in Moodle.

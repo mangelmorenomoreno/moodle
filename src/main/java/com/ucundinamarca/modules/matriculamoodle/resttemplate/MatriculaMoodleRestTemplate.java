@@ -23,7 +23,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * CronMatriculaMoodle.
+ * MatriculaMoodleRestTemplate.
  *
  * @author miguel.moreno
  * @version 1.0
