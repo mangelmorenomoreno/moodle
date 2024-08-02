@@ -115,9 +115,9 @@ public class GrupoSemillaService {
 
   private GrupoSemillawsVo createGrupoSemillawsVo(GruposPlataformaVo grupo) throws Exception {
     GrupoSemillawsVo grupoSemillawsVo = new GrupoSemillawsVo();
-    grupoSemillawsVo.setFullname(URLEncoder.encode(grupo.getNombrelargo().toUpperCase()+"migumomo",
+    grupoSemillawsVo.setFullname(URLEncoder.encode(grupo.getNombrelargo().toUpperCase(),
         StandardCharsets.UTF_8.toString()));
-    grupoSemillawsVo.setShortname(URLEncoder.encode(grupo.getNombrelargo().toUpperCase()+"migumomo",
+    grupoSemillawsVo.setShortname(URLEncoder.encode(grupo.getNombrelargo().toUpperCase(),
         StandardCharsets.UTF_8.toString()));
     grupoSemillawsVo.setTemplatecourse(URLEncoder.encode(grupo.getSemoNombrecorto().toUpperCase(),
         StandardCharsets.UTF_8.toString()));

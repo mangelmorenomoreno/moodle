@@ -9,7 +9,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -24,10 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * UsuarioMoodleRestTemplate.
@@ -128,7 +124,7 @@ public class UsuarioMoodleRestTemplate {
         response.append(line);
         response.append('\r');
       }
-      Boolean Tipo = false;
+      Boolean tipo = false;
       JSONObject jsonDates = new JSONObject();
       String responser = response.toString();
 
@@ -188,7 +184,6 @@ public class UsuarioMoodleRestTemplate {
           + "&users[0][customfields][2][value]=" + usuarioVo.getIdentificacion()
           + "&users[0][customfields][3][type]=tipo_usuario"
           + "&users[0][customfields][3][value]=" + usuarioVo.getTipo();
-
       if (usuarioVo.getCodigoEstudiante() != null && !usuarioVo.getCodigoEstudiante().equals("0")) {
         urlParameters = urlParameters
             + "&users[0][customfields][4][type]=codigo_estudiante"
@@ -198,26 +193,20 @@ public class UsuarioMoodleRestTemplate {
             + "&users[0][customfields][4][type]=codigo_estudiante"
             + "&users[0][customfields][4][value]=" + usuarioVo.getIdentificacion();
       }
-
       if (usuarioVo.getFacultad() != null) {
         urlParameters = urlParameters
             + "&users[0][customfields][5][type]=facultad"
             + "&users[0][customfields][5][value]=" + usuarioVo.getFacultad();
       }
-
       String serverurl = conexionVo.getUrl()
           + "?wstoken=" + conexionVo.getWstoken()
           + "&moodlewsrestformat=" + conexionVo.getMoodlewsrestformat()
           + "&wsfunction=" + conexionVo.getWsfunction();
-
       log.info(serverurl);
       HttpsURLConnection con = (HttpsURLConnection) new URL(serverurl).openConnection();
-
-      //SSL PROVISIONAL
       SSLContext sc = SSLContext.getInstance("SSL");
       sc.init(null, trustAllCerts, new java.security.SecureRandom());
       HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-      //SSL PROVISIONAL
       con.setRequestMethod("POST");
       con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
       con.setRequestProperty("Content-Language", "en-US");
@@ -229,7 +218,6 @@ public class UsuarioMoodleRestTemplate {
       wr.writeBytes(urlParameters);
       wr.flush();
       wr.close();
-
       InputStream is = con.getInputStream();
       BufferedReader rd = new BufferedReader(new InputStreamReader(is));
       String line;
@@ -238,12 +226,9 @@ public class UsuarioMoodleRestTemplate {
         response.append(line);
         response.append('\r');
       }
-      Boolean Tipo = false;
+      Boolean tipo = false;
       JSONObject jsonDates = new JSONObject();
       String responser = response.toString();
-
-      System.out.println("response.toString() " + responser);
-
       if (responser != null && responser != "") {
         if (responser.charAt(0) == '[') {
           JSONArray jsonResult = new JSONArray(responser);
@@ -268,7 +253,6 @@ public class UsuarioMoodleRestTemplate {
       }
     } catch (IOException | JSONException ex) {
       log.error(UsuarioMoodleRestTemplate.class.getName(), ex);
-      System.out.println("error " + ex);
     } catch (NoSuchAlgorithmException | KeyManagementException ex) {
       log.error(UsuarioMoodleRestTemplate.class.getName(), ex);
     }
