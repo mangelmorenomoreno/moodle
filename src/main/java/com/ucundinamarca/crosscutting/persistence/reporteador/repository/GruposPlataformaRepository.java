@@ -47,6 +47,8 @@ public class GruposPlataformaRepository {
     String sql = buildSqlQuery(
         grupId, peunId, unidId, progId, niedId, codMateria, tipoCadi, duplicado);
 
+    log.info("SQL CREACION GRUPOS");
+    log.info(sql);
     return jdbcTemplate.query(sql, new RowMapper<GruposPlataformaVo>() {
       @Override
       public GruposPlataformaVo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -156,7 +158,7 @@ public class GruposPlataformaRepository {
       StringBuilder sql, String grupId, String peunId, String unidId,
       String progId, String niedId, String codMateria, String duplicado) {
     if (duplicado == null) {
-      sql.append("AND GRSE.GRUP_ID IS NULL ");
+      sql.append("AND GRSE.GRUP_ID IS NULL AND GRUP.GRUP_ID = 582149 ");
     }
     if (peunId != null) {
       sql.append("AND GRUP.PEUN_ID IN ('").append(peunId).append("') ");

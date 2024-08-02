@@ -34,7 +34,7 @@ public class CronMatriculaMoodle {
    * of the execution, and handles any exceptions that occur during the process.
    * </p>
    */
-  @Scheduled(cron = "*/1 * * * * ?")
+  //@Scheduled(cron = "*/1 * * * * ?")
   public void ejecutarMatriculaEstudiante() {
     if (lock.tryLock()) {
       try {
@@ -60,7 +60,7 @@ public class CronMatriculaMoodle {
    * of the execution, and handles any exceptions that occur during the process.
    * </p>
    */
-  @Scheduled(cron = "*/1 * * * * ?")
+  //@Scheduled(cron = "*/1 * * * * ?")
   public void ejecutarDesMatriculaEstudiante() {
     if (lock.tryLock()) {
       try {
@@ -101,7 +101,7 @@ public class CronMatriculaMoodle {
    *
    * @see MatriculaMoodleService#matricularDocentesMoodle()
    */
-  @Scheduled(cron = "*/1 * * * * ?")
+  //@Scheduled(cron = "*/1 * * * * ?")
   public void ejecutarMatriculaDocente() {
     if (lock.tryLock()) {
       try {
@@ -134,7 +134,7 @@ public class CronMatriculaMoodle {
    * Indica que el método se ejecuta cada minuto.
    * </p>
    */
-  @Scheduled(cron = "*/1 * * * * ?")
+  //@Scheduled(cron = "*/1 * * * * ?")
   public void ejecutarDesmatriculaDocentesMoodle() {
     if (lock.tryLock()) {
       try {

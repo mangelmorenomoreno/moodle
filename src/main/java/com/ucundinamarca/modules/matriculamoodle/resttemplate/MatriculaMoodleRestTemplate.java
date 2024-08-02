@@ -13,6 +13,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
  * @since 13-07-2024
  */
 @Service
+@Log4j2
 public class MatriculaMoodleRestTemplate {
 
   @Autowired
@@ -76,9 +78,9 @@ public class MatriculaMoodleRestTemplate {
         + "&enrolments[0][userid]=" + matriculaMoodlewsVo.getUserid();
     String serverUrl = conexionVo.getUrl() + "?wstoken=" + conexionVo.getWstoken()
         + "&moodlewsrestformat=" + conexionVo.getMoodlewsrestformat()
-        + "&wsfunction=" + conexionVo.getWsfunction();
-
-    return enviarSolicitud(serverUrl, urlParameters);
+        + "&wsfunction=" + conexionVo.getWsfunction() + urlParameters;
+    log.info(serverUrl);
+    return enviarSolicitud(serverUrl);
   }
 
   /**
@@ -95,8 +97,8 @@ public class MatriculaMoodleRestTemplate {
         + "&enrolments[0][userid]=" + matriculaMoodlewsVo.getUserid();
     String serverUrl = conexionVo.getUrl() + "?wstoken=" + conexionVo.getWstoken()
         + "&moodlewsrestformat=" + conexionVo.getMoodlewsrestformat()
-        + "&wsfunction=" + conexionVo.getWsfunction();
-    return enviarSolicitud(serverUrl, urlParameters);
+        + "&wsfunction=" + conexionVo.getWsfunction() + urlParameters;
+    return enviarSolicitud(serverUrl);
   }
 
   /**
@@ -139,23 +141,23 @@ public class MatriculaMoodleRestTemplate {
   /**
    * Sends a request to the Moodle service.
    *
-   * @param serverUrl     the URL of the Moodle service.
-   * @param urlParameters the URL parameters for the request.
+   * @param serverUrl the URL of the Moodle service.
    * @return the response from the Moodle service.
    */
-  private RespuestaMatriculaMoodleVo enviarSolicitud(String serverUrl, String urlParameters) {
+  private RespuestaMatriculaMoodleVo enviarSolicitud(String serverUrl) {
     RespuestaMatriculaMoodleVo respuesta = new RespuestaMatriculaMoodleVo();
     try {
-      String response = restTemplate.postForObject(serverUrl, urlParameters, String.class);
-      if (response != null && !response.isEmpty()) {
-        JSONObject jsonResponse = new JSONObject(response);
-        if (jsonResponse.has("exception")) {
-          respuesta.setEjecucion(false);
-          respuesta.setException(jsonResponse.getString("exception"));
-          respuesta.setMessage(jsonResponse.getString("message"));
-        } else {
-          respuesta.setEjecucion(true);
-        }
+      String response = restTemplate.postForObject(serverUrl, "", String.class);
+      JSONObject jsonDates = new JSONObject();
+      if (response.charAt(0) == '{') {
+        jsonDates = new JSONObject(response);
+        respuesta.setEjecucion(false);
+        respuesta.setException(jsonDates.get("exception").toString());
+        respuesta.setMessage(jsonDates.get("message").toString());
+      } else {
+        respuesta.setEjecucion(true);
+        respuesta.setException(null);
+        respuesta.setMessage(null);
       }
     } catch (HttpClientErrorException | HttpServerErrorException e) {
       e.printStackTrace();

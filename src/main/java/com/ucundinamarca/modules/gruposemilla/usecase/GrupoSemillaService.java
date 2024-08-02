@@ -102,7 +102,6 @@ public class GrupoSemillaService {
   private GrupoSemilla grupoSemilla(GrupoSemillaVo grupoSemillaVo) {
     return GrupoSemilla.builder()
         .grseFechaCambio(grupoSemillaVo.getGrseFechacambio())
-        .grseId(Long.valueOf(grupoSemillaVo.getGrseId()))
         .grseIdMoodle(grupoSemillaVo.getGrseIdmoodle())
         .grseNombreCorto(grupoSemillaVo.getGrseNombrecorto())
         .grseNombreLargo(grupoSemillaVo.getGrseNombrelargo())
@@ -116,9 +115,9 @@ public class GrupoSemillaService {
 
   private GrupoSemillawsVo createGrupoSemillawsVo(GruposPlataformaVo grupo) throws Exception {
     GrupoSemillawsVo grupoSemillawsVo = new GrupoSemillawsVo();
-    grupoSemillawsVo.setFullname(URLEncoder.encode(grupo.getNombrelargo().toUpperCase(),
+    grupoSemillawsVo.setFullname(URLEncoder.encode(grupo.getNombrelargo().toUpperCase()+"migumomo",
         StandardCharsets.UTF_8.toString()));
-    grupoSemillawsVo.setShortname(URLEncoder.encode(grupo.getNombrelargo().toUpperCase(),
+    grupoSemillawsVo.setShortname(URLEncoder.encode(grupo.getNombrelargo().toUpperCase()+"migumomo",
         StandardCharsets.UTF_8.toString()));
     grupoSemillawsVo.setTemplatecourse(URLEncoder.encode(grupo.getSemoNombrecorto().toUpperCase(),
         StandardCharsets.UTF_8.toString()));

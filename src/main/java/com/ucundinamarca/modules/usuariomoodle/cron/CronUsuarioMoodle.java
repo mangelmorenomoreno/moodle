@@ -1,4 +1,4 @@
-package com.ucundinamarca.modules.usuariomoodle.dataproviders.cron;
+package com.ucundinamarca.modules.usuariomoodle.cron;
 
 import com.ucundinamarca.modules.usuariomoodle.usecase.UsuarioMoodleService;
 import java.util.concurrent.locks.Lock;
@@ -48,7 +48,7 @@ public class CronUsuarioMoodle {
   /**
    * Método que se ejecuta cada segundo para la creación de docentes.
    */
-  @Scheduled(cron = "*/1 * * * * ?")
+  //@Scheduled(cron = "*/1 * * * * ?")
   public void ejecutarCreacionDocentes() {
     if (lock.tryLock()) {
       try {

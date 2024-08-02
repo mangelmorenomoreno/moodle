@@ -4,6 +4,13 @@ import com.ucundinamarca.crosscutting.domain.dto.autentication.ConexionVo;
 import com.ucundinamarca.crosscutting.domain.dto.estudiantes.RespuestaEstudianteVo;
 import com.ucundinamarca.crosscutting.domain.dto.estudiantes.UsuariowsVo;
 import jakarta.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -20,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * UsuarioMoodleRestTemplate.
@@ -34,6 +42,20 @@ public class UsuarioMoodleRestTemplate {
 
   @Autowired
   private RestTemplate restTemplate;
+
+  private static final TrustManager[] trustAllCerts = new TrustManager[]{
+      new X509TrustManager() {
+        public X509Certificate[] getAcceptedIssuers() {
+          return null;
+        }
+
+        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+        }
+
+        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+        }
+      }
+  };
 
   @PostConstruct
   private void init() throws NoSuchAlgorithmException, KeyManagementException {
@@ -76,34 +98,69 @@ public class UsuarioMoodleRestTemplate {
       String serverUrl = conexionVo.getUrl() + "?wstoken=" + conexionVo.getWstoken()
           + "&moodlewsrestformat=" + conexionVo.getMoodlewsrestformat()
           + "&wsfunction=" + conexionVo.getWsfunction();
-      responseStr = restTemplate.postForObject(serverUrl, urlParameters, String.class);
-      if (responseStr != null && !responseStr.isEmpty()) {
-        JSONObject jsonDates;
-        if (responseStr.charAt(0) == '[') {
-          JSONArray jsonResult = new JSONArray(responseStr);
+      log.info(serverUrl);
+
+
+      HttpsURLConnection con = (HttpsURLConnection) new URL(serverUrl).openConnection();
+
+      //SSL PROVISIONAL
+      SSLContext sc = SSLContext.getInstance("SSL");
+      sc.init(null, trustAllCerts, new java.security.SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+      //SSL PROVISIONAL
+      con.setRequestMethod("POST");
+      con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+      con.setRequestProperty("Content-Language", "en-US");
+      con.setDoOutput(true);
+      con.setUseCaches(false);
+      con.setDoInput(true);
+      DataOutputStream wr = new DataOutputStream(
+          con.getOutputStream());
+      wr.writeBytes(urlParameters);
+      wr.flush();
+      wr.close();
+
+      InputStream is = con.getInputStream();
+      BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+      String line;
+      StringBuilder response = new StringBuilder();
+      while ((line = rd.readLine()) != null) {
+        response.append(line);
+        response.append('\r');
+      }
+      Boolean Tipo = false;
+      JSONObject jsonDates = new JSONObject();
+      String responser = response.toString();
+
+      System.out.println("response.toString() " + responser);
+
+      if (responser != null && responser != "") {
+        if (responser.charAt(0) == '[') {
+          JSONArray jsonResult = new JSONArray(responser);
           for (int i = 0; i < jsonResult.length(); i++) {
             jsonDates = jsonResult.getJSONObject(i);
-            respuestaEstudianteVo.setUsername(jsonDates.getString("username"));
-            respuestaEstudianteVo.setId(jsonDates.getString("id"));
+            respuestaEstudianteVo.setUsername(jsonDates.get("username").toString());
+            respuestaEstudianteVo.setId(jsonDates.get("id").toString());
             respuestaEstudianteVo.setException(null);
             respuestaEstudianteVo.setErrorcode(null);
             respuestaEstudianteVo.setMessage(null);
           }
-        } else if (responseStr.charAt(0) == '{') {
-          jsonDates = new JSONObject(responseStr);
+        }
+        if (responser.charAt(0) == '{') {
+
+          jsonDates = new JSONObject(responser);
           respuestaEstudianteVo.setUsername(null);
           respuestaEstudianteVo.setId(null);
-          respuestaEstudianteVo.setException(jsonDates.getString("exception"));
-          respuestaEstudianteVo.setErrorcode(jsonDates.getString("errorcode"));
-          respuestaEstudianteVo.setMessage(jsonDates.getString("message"));
+          respuestaEstudianteVo.setException(jsonDates.get("exception").toString());
+          respuestaEstudianteVo.setErrorcode(jsonDates.get("errorcode").toString());
+          respuestaEstudianteVo.setMessage(jsonDates.get("message").toString());
         }
       }
-    } catch (HttpClientErrorException | HttpServerErrorException e) {
-      e.printStackTrace();
-      log.error(UsuarioMoodleRestTemplate.class.getName(), e);
-    } catch (JSONException e) {
-      e.printStackTrace();
-      log.info(UsuarioMoodleRestTemplate.class.getName(), e);
+    } catch (IOException | JSONException ex) {
+      log.error(UsuarioMoodleRestTemplate.class.getName(), ex);
+      System.out.println("error " + ex);
+    } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+      log.error(UsuarioMoodleRestTemplate.class.getName(), ex);
     }
     return respuestaEstudianteVo;
   }
@@ -131,51 +188,89 @@ public class UsuarioMoodleRestTemplate {
           + "&users[0][customfields][2][value]=" + usuarioVo.getIdentificacion()
           + "&users[0][customfields][3][type]=tipo_usuario"
           + "&users[0][customfields][3][value]=" + usuarioVo.getTipo();
+
       if (usuarioVo.getCodigoEstudiante() != null && !usuarioVo.getCodigoEstudiante().equals("0")) {
-        urlParameters += "&users[0][customfields][4][type]=codigo_estudiante"
+        urlParameters = urlParameters
+            + "&users[0][customfields][4][type]=codigo_estudiante"
             + "&users[0][customfields][4][value]=" + usuarioVo.getCodigoEstudiante();
       } else {
-        urlParameters += "&users[0][customfields][4][type]=codigo_estudiante"
+        urlParameters = urlParameters
+            + "&users[0][customfields][4][type]=codigo_estudiante"
             + "&users[0][customfields][4][value]=" + usuarioVo.getIdentificacion();
       }
+
       if (usuarioVo.getFacultad() != null) {
-        urlParameters += "&users[0][customfields][5][type]=facultad"
+        urlParameters = urlParameters
+            + "&users[0][customfields][5][type]=facultad"
             + "&users[0][customfields][5][value]=" + usuarioVo.getFacultad();
       }
-      log.info(urlParameters);
-      String serverUrl = conexionVo.getUrl()
+
+      String serverurl = conexionVo.getUrl()
           + "?wstoken=" + conexionVo.getWstoken()
           + "&moodlewsrestformat=" + conexionVo.getMoodlewsrestformat()
           + "&wsfunction=" + conexionVo.getWsfunction();
-      log.info(serverUrl);
-      String responseStr = restTemplate.postForObject(serverUrl, urlParameters, String.class);
-      if (responseStr != null && !responseStr.isEmpty()) {
-        JSONObject jsonDates;
-        if (responseStr.charAt(0) == '[') {
-          JSONArray jsonResult = new JSONArray(responseStr);
+
+      log.info(serverurl);
+      HttpsURLConnection con = (HttpsURLConnection) new URL(serverurl).openConnection();
+
+      //SSL PROVISIONAL
+      SSLContext sc = SSLContext.getInstance("SSL");
+      sc.init(null, trustAllCerts, new java.security.SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+      //SSL PROVISIONAL
+      con.setRequestMethod("POST");
+      con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+      con.setRequestProperty("Content-Language", "en-US");
+      con.setDoOutput(true);
+      con.setUseCaches(false);
+      con.setDoInput(true);
+      DataOutputStream wr = new DataOutputStream(
+          con.getOutputStream());
+      wr.writeBytes(urlParameters);
+      wr.flush();
+      wr.close();
+
+      InputStream is = con.getInputStream();
+      BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+      String line;
+      StringBuilder response = new StringBuilder();
+      while ((line = rd.readLine()) != null) {
+        response.append(line);
+        response.append('\r');
+      }
+      Boolean Tipo = false;
+      JSONObject jsonDates = new JSONObject();
+      String responser = response.toString();
+
+      System.out.println("response.toString() " + responser);
+
+      if (responser != null && responser != "") {
+        if (responser.charAt(0) == '[') {
+          JSONArray jsonResult = new JSONArray(responser);
           for (int i = 0; i < jsonResult.length(); i++) {
             jsonDates = jsonResult.getJSONObject(i);
-            respuestaEstudianteVo.setUsername(jsonDates.getString("username"));
-            respuestaEstudianteVo.setId(jsonDates.getString("id"));
+            respuestaEstudianteVo.setUsername(jsonDates.get("username").toString());
+            respuestaEstudianteVo.setId(jsonDates.get("id").toString());
             respuestaEstudianteVo.setException(null);
             respuestaEstudianteVo.setErrorcode(null);
             respuestaEstudianteVo.setMessage(null);
           }
-        } else if (responseStr.charAt(0) == '{') {
-          jsonDates = new JSONObject(responseStr);
+        }
+        if (responser.charAt(0) == '{') {
+
+          jsonDates = new JSONObject(responser);
           respuestaEstudianteVo.setUsername(null);
           respuestaEstudianteVo.setId(null);
-          respuestaEstudianteVo.setException(jsonDates.getString("exception"));
-          respuestaEstudianteVo.setErrorcode(jsonDates.getString("errorcode"));
-          respuestaEstudianteVo.setMessage(jsonDates.getString("message"));
+          respuestaEstudianteVo.setException(jsonDates.get("exception").toString());
+          respuestaEstudianteVo.setErrorcode(jsonDates.get("errorcode").toString());
+          respuestaEstudianteVo.setMessage(jsonDates.get("message").toString());
         }
       }
-    } catch (HttpClientErrorException | HttpServerErrorException e) {
-      e.printStackTrace();
-      log.error(UsuarioMoodleRestTemplate.class.getName(), e);
-    } catch (JSONException e) {
-      e.printStackTrace();
-      log.info(UsuarioMoodleRestTemplate.class.getName(), e);
+    } catch (IOException | JSONException ex) {
+      log.error(UsuarioMoodleRestTemplate.class.getName(), ex);
+      System.out.println("error " + ex);
+    } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+      log.error(UsuarioMoodleRestTemplate.class.getName(), ex);
     }
     return respuestaEstudianteVo;
   }

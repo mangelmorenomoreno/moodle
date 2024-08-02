@@ -67,8 +67,8 @@ public class MatriculaMoodleService {
   public void matricularEstudianteMoodle() throws Exception {
     List<EstudiantesMatriculaMoodleVo> estudiantesMatriculaMoodleVos =
         imatriculaMoodleDataProviders.listarEstudiantesMatriculaMasiva(
-            null, null, null, "1", null, null,
-            null, null, null, null);
+            null, null, null, "1", null, "227962",
+            null, null, null, "9184");
     Timestamp fechaCambio = new Timestamp(System.currentTimeMillis());
     for (EstudiantesMatriculaMoodleVo estudiante : estudiantesMatriculaMoodleVos) {
       MatriculaMoodlewsVo matriculaMoodlewsVo = crearMatriculaMoodleVo(estudiante);
