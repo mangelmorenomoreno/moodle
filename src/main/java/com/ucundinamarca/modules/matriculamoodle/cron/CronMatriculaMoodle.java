@@ -118,4 +118,37 @@ public class CronMatriculaMoodle {
     }
   }
 
+  /**
+   * Método programado para desmatricular docentes en Moodle.
+   * Este método se ejecuta cada minuto según la expresión cron especificada.
+   * <p>
+   * El método intenta adquirir un bloqueo antes de proceder con la ejecución
+   * para evitar múltiples ejecuciones concurrentes. Si el bloqueo es adquirido,
+   * se registra el inicio de la operación, se llama al servicio de matrícula
+   * para desmatricular a los docentes, y finalmente se registra la finalización
+   * de la operación. Si ocurre una excepción durante la ejecución, se registra
+   * un error en los logs.
+   *
+   * Si no se puede adquirir el bloqueo, se registra un mensaje informando que
+   * el cron ya está en ejecución y se omite la ejecución.
+   * Indica que el método se ejecuta cada minuto.
+   * </p>
+   */
+  @Scheduled(cron = "*/1 * * * * ?")
+  public void ejecutarDesmatriculaDocentesMoodle() {
+    if (lock.tryLock()) {
+      try {
+        log.info("Inicia desmatriculaDocentesMoodle: " + System.currentTimeMillis());
+        matriculaMoodleService.desmatriculaDocentesMoodle();
+        log.info("Finaliza desmatriculaDocentesMoodle: " + System.currentTimeMillis());
+      } catch (Exception e) {
+        log.error("Error en desmatriculaDocentesMoodle", e);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      log.info("Cron ya está en ejecución desmatriculaDocentesMoodle, omitiendo ejecución...");
+    }
+  }
+
 }

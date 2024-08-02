@@ -4,7 +4,8 @@ import com.ucundinamarca.crosscutting.domain.dto.moodle.DocentesMatriculaVo;
 import com.ucundinamarca.crosscutting.domain.dto.moodle.EstudiantesMatriculaMoodleVo;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.entity.MatriculaMoodle;
 import com.ucundinamarca.crosscutting.persistence.camposdeaprendizaje.repository.MatriculaMoodleRepository;
-import com.ucundinamarca.crosscutting.persistence.reporteador.repository.DesMatriculaMoodleRepository;
+import com.ucundinamarca.crosscutting.persistence.reporteador.repository.DesMatriculaEstudianteMoodleRepository;
+import com.ucundinamarca.crosscutting.persistence.reporteador.repository.DocentesDesMatriculaRepository;
 import com.ucundinamarca.crosscutting.persistence.reporteador.repository.MatriculaDocentesReporteador;
 import com.ucundinamarca.crosscutting.persistence.reporteador.repository.MatriculaEstudianteMoodleReporteador;
 import com.ucundinamarca.modules.matriculamoodle.dataproviders.ImatriculaMoodleDataProviders;
@@ -31,10 +32,13 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
   private MatriculaEstudianteMoodleReporteador matriculaMoodleReporteadorRepository;
 
   @Autowired
-  private DesMatriculaMoodleRepository desmatriculaMoodleRepository;
+  private DesMatriculaEstudianteMoodleRepository desmatriculaEstudianteMoodleRepository;
 
   @Autowired
   private MatriculaDocentesReporteador matriculaDocentesReporteador;
+
+  @Autowired
+  private DocentesDesMatriculaRepository docentesDesMatriculaRepository;
 
 
   @Override
@@ -60,7 +64,7 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
   public List<EstudiantesMatriculaMoodleVo> listarDesmatriculaEstudiantes(
       String instId, String pegeId, String grupId, String peunId, String documento
   ) throws Exception {
-    return desmatriculaMoodleRepository.listarDesmatricula(
+    return desmatriculaEstudianteMoodleRepository.listarDesmatricula(
         instId, pegeId, grupId, peunId, documento);
   }
 
@@ -76,6 +80,16 @@ public class MatriculaMoodleDataProviders implements ImatriculaMoodleDataProvide
       String unidad, String instancia)
       throws Exception {
     return matriculaDocentesReporteador.listarMatriculaDocenteMasiva(grupId, pegeId, documento,
+        peunId, usuario, programa, unidad, instancia);
+  }
+
+  @Override
+  public List<DocentesMatriculaVo> desmatriculaDocentes(
+      String grupId, String pegeId,
+      String documento, String peunId, String usuario,
+      String programa, String unidad, String instancia) throws Exception {
+    return docentesDesMatriculaRepository.desmatriculaDocentes(
+        grupId, pegeId, documento,
         peunId, usuario, programa, unidad, instancia);
   }
 

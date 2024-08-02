@@ -134,6 +134,12 @@ public class MatriculaMoodleService {
     return matriculaMoodlewsVo;
   }
 
+  /**
+   * Crea un objeto de matrícula para Moodle a partir de un objeto de docentes.
+   *
+   * @param datos El objeto de datos de la matrícula del docente.
+   * @return Un objeto de matrícula para Moodle.
+   */
   private MatriculaMoodlewsVo crearMatriculaMoodleVo(DocentesMatriculaVo datos)
       throws Exception {
     MatriculaMoodlewsVo matriculaMoodlewsVo = new MatriculaMoodlewsVo();
@@ -179,6 +185,15 @@ public class MatriculaMoodleService {
     imatriculaMoodleDataProviders.delete(matriculaMoodle);
   }
 
+  private void eliminarMatriculaDocente(DocentesMatriculaVo docente) throws Exception {
+    MatriculaMoodle matriculaMoodle = new MatriculaMoodle();
+    matriculaMoodle.setMamoId(Long.valueOf(docente.getMamoId()));
+    matriculaMoodle.setGrseId(Long.valueOf(docente.getGrseId()));
+    matriculaMoodle.setUsmoId(Long.valueOf(docente.getUsmoId()));
+    matriculaMoodle.setRomoId(Long.valueOf(docente.getRomoId()));
+    imatriculaMoodleDataProviders.delete(matriculaMoodle);
+  }
+
 
   private void logResultadoAlmacenamiento(MatriculaMoodle guardar) {
     if (guardar != null) {
@@ -212,6 +227,30 @@ public class MatriculaMoodleService {
           conexion.conexionPregradoDesMatriculaMoodle(), matriculaMoodlewsVo);
       if (respuesta.isEjecucion()) {
         eliminarMatricula(estudiante);
+      }
+    }
+  }
+
+  /**
+   * Método para desmatricular a los docentes en Moodle.
+   * Este método obtiene una lista de docentes a desmatricular, luego
+   * crea objetos de matrícula para cada docente y llama al servicio
+   * REST para desmatricularlos en Moodle. Si la desmatriculación es exitosa,
+   * elimina la matrícula del docente del sistema local.
+   *
+   * @throws Exception si ocurre un error durante el proceso de desmatriculación.
+   */
+  public void desmatriculaDocentesMoodle() throws Exception {
+    List<DocentesMatriculaVo>
+        desmatricularGeneral = imatriculaMoodleDataProviders.desmatriculaDocentes(
+        null, null, null, null, null, null,
+        null, null);
+    for (DocentesMatriculaVo docentesMatriculaVo : desmatricularGeneral) {
+      MatriculaMoodlewsVo matriculaMoodlewsVo = crearMatriculaMoodleVo(docentesMatriculaVo);
+      RespuestaMatriculaMoodleVo respuesta = matriculaMoodleRestTemplate.desMatriculaMoodle(
+          conexion.conexionPregradoDesMatriculaMoodle(), matriculaMoodlewsVo);
+      if (respuesta.isEjecucion()) {
+        eliminarMatriculaDocente(docentesMatriculaVo);
       }
     }
   }

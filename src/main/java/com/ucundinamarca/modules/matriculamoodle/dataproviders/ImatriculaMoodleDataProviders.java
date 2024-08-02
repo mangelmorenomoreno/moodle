@@ -34,4 +34,8 @@ public interface ImatriculaMoodleDataProviders {
                                              String peunId, String usuario, String programa,
                                              String unidad, String instancia) throws Exception;
 
+  List<DocentesMatriculaVo> desmatriculaDocentes(
+      String grupId, String pegeId, String documento, String peunId, String usuario,
+      String programa, String unidad, String instancia) throws Exception;
+
 }
